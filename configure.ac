@@ -43,7 +43,12 @@ AC_CHECK_FUNCS([memset])
 
 AC_CONFIG_FILES([Makefile
 				 src/Makefile
+				 src/Objects/Makefile
+				 src/Objects/Table/Makefile
+				 src/Objects/Knight/Makefile
+				 src/Objects/Knife/Makefile
 				 src/Algorithms/Makefile
+				 src/Algorithms/SimpleDinner/Makefile
 				 src/GUI/Makefile
 				 lib/Various/Makefile
 				 lib/Makefile])
