@@ -8,8 +8,9 @@ libKnife_la_SOURCES	= Knife.cc
 noinst_PROGRAMS = knife
 
 knife_CXXFLAGS	=
-knife_LDADD	= $(top_builddir)/lib/lib@PACKAGE@.la \
-	libKnife.la
+knife_LDADD	=  \
+	libKnife.la \
+	$(top_builddir)/lib/lib@PACKAGE@.la
 knife_SOURCES = knife.cc
 
 all-local:

@@ -23,7 +23,7 @@ AC_SUBST(ASTYLE_OPT)
 
 # Checks for libraries.
 
-CXXFLAGS="-I\$(top_builddir)/include -std=c++03"
+CXXFLAGS="-I\$(top_builddir)/include -std=c++03 -pthread"
 
 AC_SUBST(LDFLAGS)
 AC_SUBST(CXXFLAGS)
