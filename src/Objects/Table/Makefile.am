@@ -17,7 +17,7 @@ table_LDADD	= \
 	$(top_builddir)/lib/lib@PACKAGE@.la
 table_SOURCES = table.cc
 
-all-local:
+check:
 	./table
 
 style:

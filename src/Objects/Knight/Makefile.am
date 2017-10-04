@@ -18,7 +18,7 @@ knight_LDADD	= \
 	../Knife/libKnife.la
 knight_SOURCES = knight.cc
 
-all-local:
+check:
 	./knight
 
 style:

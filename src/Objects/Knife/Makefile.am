@@ -13,7 +13,7 @@ knife_LDADD	=  \
 	$(top_builddir)/lib/lib@PACKAGE@.la
 knife_SOURCES = knife.cc
 
-all-local:
+check:
 	./knife
 
 style:
