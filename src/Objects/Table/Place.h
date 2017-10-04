@@ -20,12 +20,16 @@ class Place
 	public:
 		virtual ~Place();
 		bool isBusy() const { return busy_; };
-		void take() { busy_ = true; };
-		void free() { busy_ = false; };
+		bool take(); // занять место
+		bool free(); // освободить место
 		bool swapKnifes(); // поменять ножи местами на конкретном месте
 		bool isKnifesDifferent() const; // проверить что ножи разные
 		Table::Knifes::iterator getLeftKnife() const; // Получить итератор на левый нож
 		Table::Knifes::iterator getRightKnife() const; // Получить итератор на правый нож
+		bool takeLeftKnife() const; // Взять левый нож со стола
+		bool takeRightKnife() const; // Взять правый нож со стола
+		bool putLeftKnife() const; // Положить левый нож на стол
+		bool putRightKnife() const; // Положить правый нож на стол
 		
 	protected:
 		Place( Table* table ); // Место создается за столом

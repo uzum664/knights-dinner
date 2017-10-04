@@ -24,7 +24,7 @@ class Place;
 class Table
 {
 	public:
-		static Table* Instance( const int& num );
+		static Table* Instance( const int& num = 0 );
 		virtual ~Table();
 		const std::string textDraw() const; // рисуем стол (размещение и ножи), пока в тексте
 		typedef std::list<Knife*> Knifes;

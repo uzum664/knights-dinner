@@ -21,6 +21,22 @@ Place::~Place()
 {
 }
 //---------------------------------------------------------------------------------------
+bool Place::take()
+{
+	if( busy_ )
+		return false;
+	busy_ = true;
+	return true;
+}
+//---------------------------------------------------------------------------------------
+bool Place::free()
+{
+	if( !busy_ )
+		return false;
+	busy_ = false;
+	return true;
+}
+//---------------------------------------------------------------------------------------
 Table::Knifes::iterator Place::getLeftKnife() const
 {
 	return left_knife_;
@@ -29,6 +45,26 @@ Table::Knifes::iterator Place::getLeftKnife() const
 Table::Knifes::iterator Place::getRightKnife() const
 {
 	return right_knife_;
+}
+//---------------------------------------------------------------------------------------
+bool Place::takeLeftKnife() const
+{
+	return table_->take(left_knife_);
+}
+//---------------------------------------------------------------------------------------
+bool Place::takeRightKnife() const
+{
+	return table_->take(right_knife_);
+}
+//---------------------------------------------------------------------------------------
+bool Place::putLeftKnife() const
+{
+	return table_->put(left_knife_);
+}
+//---------------------------------------------------------------------------------------
+bool Place::putRightKnife() const
+{
+	return table_->put(right_knife_);
 }
 //---------------------------------------------------------------------------------------
 bool Place::swapKnifes()
