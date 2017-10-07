@@ -8,7 +8,9 @@ namespace knights
 {
 
 /*!
-	Класс Нож - собственно ресурс, который можно только взять и положить
+	Класс Нож - собственно ресурс, который можно только взять и положить.
+	Что бы не проверять каждый раз взят ли нож кем то, добавлено условие taken_cond_
+		за которым рыцарь может следить пока разговаривает (KnightTalkState).)
 */
 
 class Knife
@@ -18,6 +20,7 @@ class Knife
 		bool take(); // Взять нож
 		bool put(); // Положить нож
 		bool isTaken(); // Проверить не занят ли нож
+		bool lookFor( const int& ms ); // ожидаем что нож освободится в течение мс
 		
 	protected:
 		Knife(); // Нож без типа не бывает
@@ -27,6 +30,7 @@ class Knife
 		
 	private:
 		pthread_mutex_t taken_mutex_;
+		pthread_cond_t taken_cond_;
 		bool taken_; // Признак что нож занят
 };
 

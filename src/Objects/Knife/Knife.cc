@@ -1,5 +1,6 @@
 #include "Knife.h"
 #include "Configuration.h"
+#include <errno.h>
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -46,8 +47,33 @@ bool Knife::put()
 		taken_ = false;
 		ret = true;
 	}
+	// посылаем сигнал, если кто то ждет
+	pthread_cond_signal(&taken_cond_);
 	pthread_mutex_unlock(&taken_mutex_);
 	return ret;
+}
+//---------------------------------------------------------------------------------------
+bool Knife::lookFor( const int& ms )
+{
+	pthread_mutex_lock(&taken_mutex_);
+	
+	if( !taken_ )
+	{
+		pthread_mutex_unlock(&taken_mutex_);
+		return true;
+	}
+	
+	struct timespec stime;
+	int now = time(NULL);
+	stime.tv_sec = now + ms / 1000;
+	if( pthread_cond_timedwait(&taken_cond_, &taken_mutex_, &stime) == ETIMEDOUT )
+	{
+		pthread_mutex_unlock(&taken_mutex_);
+		return false;
+	}
+	
+	pthread_mutex_unlock(&taken_mutex_);
+	return true;
 }
 //---------------------------------------------------------------------------------------
 bool Knife::isTaken()
