@@ -71,7 +71,7 @@ void Knight::thread()
 		usleep( getPollTimeout() * 1000 ) ;
 	}
 	ostringstream os;
-	os << *this << " ends dinner" << endl;
+	os << *this << " ends dinner ("<< " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << ")" << endl;
 	cout << os.str();
 }
 //---------------------------------------------------------------------------------------

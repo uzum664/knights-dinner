@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <iostream>
-//#include "Knight.h"
 
 namespace knights
 {
