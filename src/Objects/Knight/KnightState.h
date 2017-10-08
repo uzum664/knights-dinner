@@ -9,6 +9,22 @@ namespace knights
 
 class Knight;
 
+/*!
+	Класс Состояние Рыцаря - есть неколько сотояний:
+		KnightWaitingState - Рыцарь находится в ожидании, выполняет следующие действия:
+			- может поменять ножи местами если требуется
+			- перейти в KnightTransientState, если голоден, сидит за столом и есть разрешение на обед
+		KnightTransientState - переходный процесс, пока рыцарь решает что делать дальше, выполняет следующие действия:
+			- запросить смену ножей, если видит что у него 2 одинаковых
+			- перейти в состояние KnightTalkState
+			- перейти в состояние KnightEatState
+		KnightEatState - прием пищи
+			- в конце трапезы может поменять ножи местами если требуется
+			- в конце трапезы переходит в KnightTransientState
+		KnightTalkState - рассказ истории
+			- в конце рассказа переходит в KnightTransientState
+*/
+
 class KnightState
 {
 	public:
@@ -18,7 +34,7 @@ class KnightState
 
 		virtual bool activate( Knight* knight );
 		virtual bool deactivate( Knight* knight );
-		virtual void step( Knight* knight ) {}
+		virtual void step( Knight* knight ) {};
 
 		virtual const std::string stateName()
 		{
@@ -31,13 +47,10 @@ class KnightState
 
 	protected:
 		KnightState();
-		void changeState( Knight* knight, KnightState* state );
 		KnightState* getState( Knight* knight );
-		Place* getPlace( Knight* knight ) const { return knight->place_; } // Место рыцаря
-		bool hasPlace( Knight* knight ) const { return knight->place_ != NULL; } // Рыцарь занял место
-		bool hasPermision( Knight* knight ) const { return knight->has_permition_; } // есть разрешение
-		bool isHungry( Knight* knight ) const { return knight->hunger > 0; } // рыцарь голоден
-		void tellStory( Knight* knight ) { knight->story_num_++; }// рыцарь рассказывает историю
+		void changeState( Knight* knight, KnightState* state );
+		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
+		void tellStory( Knight* knight ) { knight->story_num_++; } // рыцарь рассказывает историю
 		void eat( Knight* knight ) { knight->meal_num_++; knight->hunger--; }// рыцарь кушает
 
 	private:

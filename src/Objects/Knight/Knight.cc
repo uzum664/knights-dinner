@@ -17,6 +17,8 @@ Knight::Knight( const std::string& name ) :
 	,has_permition_(false)
 	,hunger(1)
 	,place_(NULL)
+	,waiting_knifes_(false)
+	,need_swap_knifes_(false)
 {
 	state_ = KnightWaitingState::Instance();
 	state_->activate(this);
@@ -24,6 +26,22 @@ Knight::Knight( const std::string& name ) :
 //---------------------------------------------------------------------------------------
 Knight::~Knight()
 {
+	// прерываем поток
+	if( running_ )
+	{
+		int status = pthread_cancel(thread_);
+		if( status != 0 )
+		{
+			ostringstream os;
+			os << "main(): error: can't cancel thread, status = " << status;
+			throw Exception( os.str() );
+		}
+	}
+	if( place_ )
+	{
+		place_->putLeftKnife();
+		place_->putRightKnife();
+	}
 }
 //---------------------------------------------------------------------------------------
 void Knight::lookFor(Knight* knight)
@@ -32,7 +50,7 @@ void Knight::lookFor(Knight* knight)
 	if( status != 0 )
 	{
 		ostringstream os;
-		os << "main(): error: can't join fknife_thread, status = " << status;
+		os << "main(): error: can't join thread, status = " << status;
 		throw Exception( os.str() );
 	}
 }
@@ -60,19 +78,13 @@ void Knight::run()
 //---------------------------------------------------------------------------------------
 void Knight::thread()
 {
-	while( hunger > 0 )
+	// поток рыцаря, он всегда что нибудь делает, поток будет прерван в деструкторе рыцаря
+	while( true )
 	{
-		// обернул в ostringstream что бы логи рыцарей не накладывались друг на друга
-		ostringstream os;
-		os << *this << " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << endl;
-		cout << os.str();
 		// Рыцарь выполняет действия в зависимости от состояния
 		state_->step(this);
 		usleep( getPollTimeout() * 1000 ) ;
 	}
-	ostringstream os;
-	os << *this << " ends dinner ("<< " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << ")" << endl;
-	cout << os.str();
 }
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
@@ -85,15 +97,17 @@ void Knight::permit( bool permition )
 //---------------------------------------------------------------------------------------
 bool Knight::putOn( Place* place )
 {
-	// если меняем место то переходим в ожидании -> оттуда поподем в переходный
+	// если меняем место то переходим в ожидании -> оттуда попадем в переходный
 	changeState( KnightWaitingState::Instance() );
 	// освобождаем место если уже сидели
 	if( place_ )
 		place_->free();
-	place_ = place;
 	// пробуем занять место
-	if( place_ )
-		return place_->take();
+	if( place && place->take() )
+	{
+		place_ = place;
+		return true;
+	}
 	return false;
 }
 //---------------------------------------------------------------------------------------

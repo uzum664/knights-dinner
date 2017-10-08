@@ -13,15 +13,10 @@ class KnightState;
 void* knight_thread( void* param );
 
 /*!
-	Класс Рыцарь - самостоятельный поток, который выполняет разные задачи в зависимости от сотояния:
-		KnightWaitState - ожидание приглашения за стол
-		KnightTransientState - переходный процесс
-		KnightEatState - прием пищи
-		KnightTellState - рассказ истории
+	Класс Рыцарь - самостоятельный поток, который выполняет разные задачи в зависимости от сотояния.
 	Класс Рыцарь выполняет следующие задачи:
-		- пока он голоден и есть разрешение, то будет пытаться взть ножи, что бы поесть
-		- если нет свободных ножей, то будет рассказывать историю
-		- если взял оба ножа то может их поменять местами
+		- пока он голоден и есть разрешение, то будет пытаться взять ножи, что бы поесть
+		- если не может взять 2 разных ножа, то будет рассказывать истории
 */
 
 class Knight
@@ -29,9 +24,19 @@ class Knight
 	public:
 		Knight( const std::string& name );
 		virtual ~Knight();
+		
 		int getEatTimeout() { return 10000; } // время на поесть, мс
 		int getTalkTimeout() { return 10000; } // время на рассказ, мс
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
+		
+		void setSwapKnifes( bool swap ) { need_swap_knifes_ = swap; } // Попросить рыцаря поменять ножи местами
+		bool needSwapKnifes() { return need_swap_knifes_; } // Рыцарю нужно поменять ножи
+		void setWaitingDifferentKnifes( bool waiting ) { waiting_knifes_ = waiting; } // Выставить флаг ожидания ножей
+		bool isWaitingDifferentKnifes() { return waiting_knifes_; } // Рыцарь ждет подходящих ножей
+		bool isHungry() const { return hunger > 0; } // рыцарь голоден
+		bool toldStory() const { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
+		bool hasPlace() const { return place_ != NULL; } // Рыцарь занял место
+		bool hasPermision() const { return has_permition_; } // есть разрешение
 		void permit( bool permition ); // разрешить кушать
 		bool putOn( Place* place ); // посадить рыцаря на место
 		void run(); // Запускает поток рыцаря
@@ -47,7 +52,7 @@ class Knight
 		friend class KnightState;
 		
 	private:
-		bool running_; // флаг что уже запущен
+		bool running_; // флаг что уже запущен поток
 		std::string name_; // Имя рыцаря
 		KnightState* state_; // Состояние рыцаря
 		bool has_right_knife_; // Нож cправа взят в руке
@@ -57,6 +62,8 @@ class Knight
 		bool has_permition_; // есть разрешение начать обед
 		int hunger; // голод рыцаря
 		Place* place_; // Место за столом
+		bool waiting_knifes_; // флаг ожидания ножей
+		bool need_swap_knifes_; // флаг для смены ножей
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;
 };

@@ -1,5 +1,7 @@
 #include "Knight.h"
 #include "KnightState.h"
+#include "Place.h"
+#include <sstream>
 // -------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -31,12 +33,38 @@ void KnightWaitingState::Destroy()
 void KnightWaitingState::step( Knight* knight )
 {
 	// если не заняли место остаемся в ожидании
-	if( !hasPlace(knight) )
+	if( !knight->hasPlace() )
 		return;
 	// если нет разрешения обедать остаемся в ожидании
-	if( !hasPermision(knight) )
+	if( !knight->hasPermision() )
 		return;
 	
-	changeState( knight, KnightTransientState::Instance() );
+	// если голодны или не рассказали хотя бы 1 историю 
+	if( knight->isHungry() || !knight->toldStory() )
+	{
+		changeState( knight, KnightTransientState::Instance() );
+		return;
+	}
+	
+	Place* place = getPlace(knight);
+	// Если нужно поменяли ножи местами
+	if( !knight->needSwapKnifes() )
+		return;
+	
+	if( !place->takeLeftKnife() )
+		return;
+	
+	if( !place->takeRightKnife() )
+	{
+		place->putLeftKnife();
+		return;
+	}
+	ostringstream os;
+	os << *knight << " swap knifes" << endl;
+	cout << os.str();
+	knight->setSwapKnifes( false );
+	place->swapKnifes();
+	place->putLeftKnife();
+	place->putRightKnife();
 }
 // ---------------------------------------------------------------------------
