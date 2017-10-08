@@ -87,6 +87,16 @@ void Knight::thread()
 	}
 }
 //---------------------------------------------------------------------------------------
+bool Knight::askSwapKnifes()
+{
+	if( !place_ )
+		return false;
+	if( !place_->isKnifesDifferent() )
+		return false;
+	setSwapKnifes( true );
+	return true;
+}
+//---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
 {
 	// если забрали разрешение обедать переходим в ожидании

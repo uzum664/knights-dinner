@@ -1,6 +1,7 @@
 #include "SimpleDinner.h"
 #include "Table/Table.h"
 #include "Knight/Knight.h"
+#include <unistd.h>
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -20,9 +21,42 @@ SimpleDinner::~SimpleDinner()
 //---------------------------------------------------------------------------------------
 void SimpleDinner::loop()
 {
-	// цикл обеда, пока просто всех ждем
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		Knight::lookFor( *it );
+	while( true )
+	{
+		bool anyoneHungry = false;
+		bool someoneNotToldStory = false;
+		
+		Knight* prev = knights.back();
+		Knight* next = NULL;
+		for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+		{
+			Knights::iterator nextIt = it;
+			nextIt++;
+			if( nextIt == knights.end() )
+				next = knights.front();
+			else
+				next = *nextIt;
+			
+			// проверяем что хоть кто то голоден
+			if( (*it)->isHungry() )
+				anyoneHungry = true;
+			// проверяем что хоть кто то не расказывал историю
+			if( !(*it)->toldStory() )
+				someoneNotToldStory = true;
+			
+			// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
+			// если у соседей нашелся подходящий нож то флаг ожидания ножа сбрасываем
+			if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) )
+				(*it)->setWaitingDifferentKnifes(false);
+			
+			prev = *it;
+		}
+		
+		if( !anyoneHungry && !someoneNotToldStory )
+			break;
+		
+		usleep(100000);
+	}
 }
 //---------------------------------------------------------------------------------------
 void SimpleDinner::start()
@@ -43,7 +77,7 @@ bool SimpleDinner::addKnight( const std::string& name )
 	if( knights.size() >= place_num_ )
 		return false;
 	Knight* knight = new Knight( name );
-	knight->putOn(table->findFreePlace());
+	knight->putOn( table->findFreePlace() );
 	knight->run();
 	knights.push_back( knight );
 	return true;

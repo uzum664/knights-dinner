@@ -51,6 +51,7 @@ void KnightWaitingState::step( Knight* knight )
 	if( !knight->needSwapKnifes() )
 		return;
 	
+	// пытаемся взять ножи
 	if( !place->takeLeftKnife() )
 		return;
 	

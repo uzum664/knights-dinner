@@ -49,7 +49,7 @@ void KnightTransientState::step( Knight* knight )
 		ostringstream os;
 		os << *knight << " ask for swapping knifes" << endl;
 		cout << os.str();
-		knight->setWaitingDifferentKnifes( true );
+		knight->setWaitingDifferentKnifes(true);
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}

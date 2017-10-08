@@ -29,7 +29,8 @@ class Knight
 		int getTalkTimeout() { return 10000; } // время на рассказ, мс
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
-		void setSwapKnifes( bool swap ) { need_swap_knifes_ = swap; } // Попросить рыцаря поменять ножи местами
+		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
+		void setSwapKnifes( bool swap ) { need_swap_knifes_ = swap; } // Выставить флаг для смены ножей местами
 		bool needSwapKnifes() { return need_swap_knifes_; } // Рыцарю нужно поменять ножи
 		void setWaitingDifferentKnifes( bool waiting ) { waiting_knifes_ = waiting; } // Выставить флаг ожидания ножей
 		bool isWaitingDifferentKnifes() { return waiting_knifes_; } // Рыцарь ждет подходящих ножей
