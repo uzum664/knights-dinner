@@ -30,10 +30,8 @@ class Knight
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
 		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
-		void setSwapKnifes( bool swap ) { need_swap_knifes_ = swap; } // Выставить флаг для смены ножей местами
-		bool needSwapKnifes() { return need_swap_knifes_; } // Рыцарю нужно поменять ножи
-		void setWaitingDifferentKnifes( bool waiting ) { waiting_knifes_ = waiting; } // Выставить флаг ожидания ножей
-		bool isWaitingDifferentKnifes() { return waiting_knifes_; } // Рыцарь ждет подходящих ножей
+		void setWaitingDifferentKnifes( bool waiting ); // Выставить флаг ожидания ножей
+		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
 		bool isHungry() const { return hunger > 0; } // рыцарь голоден
 		bool toldStory() const { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
 		bool hasPlace() const { return place_ != NULL; } // Рыцарь занял место
@@ -45,6 +43,9 @@ class Knight
 		
 	protected:
 		Knight(){}; // Безымянных рыцарей нету
+		void setSwapKnifes( bool swap ); // Выставить флаг для смены ножей местами
+		bool needSwapKnifes(); // Рыцарю нужно поменять ножи
+		
 		void changeState( KnightState* state ); // Смена состояния рыцаря
 		void thread(); // Поток рыцаря в котором он может брать/ложить ножи, кушать, рассказывать
 		friend void* knight_thread( void* param );
@@ -65,6 +66,7 @@ class Knight
 		Place* place_; // Место за столом
 		bool waiting_knifes_; // флаг ожидания ножей
 		bool need_swap_knifes_; // флаг для смены ножей
+		pthread_mutex_t mutex_;
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;
 };

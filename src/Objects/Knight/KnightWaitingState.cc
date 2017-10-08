@@ -48,7 +48,7 @@ void KnightWaitingState::step( Knight* knight )
 	
 	Place* place = getPlace(knight);
 	// Если нужно поменяли ножи местами
-	if( !knight->needSwapKnifes() )
+	if( !needSwapKnifes(knight) )
 		return;
 	
 	// пытаемся взять ножи
@@ -63,7 +63,7 @@ void KnightWaitingState::step( Knight* knight )
 	ostringstream os;
 	os << *knight << " swap knifes" << endl;
 	cout << os.str();
-	knight->setSwapKnifes( false );
+	resetSwapKnifes(knight);
 	place->swapKnifes();
 	place->putLeftKnife();
 	place->putRightKnife();

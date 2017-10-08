@@ -52,6 +52,8 @@ class KnightState
 		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
 		void tellStory( Knight* knight ) { knight->story_num_++; } // рыцарь рассказывает историю
 		void eat( Knight* knight ) { knight->meal_num_++; knight->hunger--; }// рыцарь кушает
+		void resetSwapKnifes( Knight* knight ) { knight->setSwapKnifes(false); } // Сбросить флаг для смены ножей местами
+		bool needSwapKnifes( Knight* knight ) { return knight->needSwapKnifes(); } // Рыцарю нужно поменять ножи
 
 	private:
 		static KnightState* inst_;

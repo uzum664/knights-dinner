@@ -20,12 +20,24 @@ Knight::Knight( const std::string& name ) :
 	,waiting_knifes_(false)
 	,need_swap_knifes_(false)
 {
+	int status = pthread_mutex_init(&mutex_, NULL);
+	if (status != 0) {
+		ostringstream os;
+		os << "Knife(): error: can't create mutex, status = " << status;
+		throw Exception( os.str() );
+	}
 	state_ = KnightWaitingState::Instance();
 	state_->activate(this);
 }
 //---------------------------------------------------------------------------------------
 Knight::~Knight()
 {
+	int status = pthread_mutex_destroy(&mutex_);
+	if (status != 0) {
+		ostringstream os;
+		os << "Knife(): error: can't destroy mutex, status = " << status;
+		throw Exception( os.str() );
+	}
 	// прерываем поток
 	if( running_ )
 	{
@@ -95,6 +107,38 @@ bool Knight::askSwapKnifes()
 		return false;
 	setSwapKnifes( true );
 	return true;
+}
+//---------------------------------------------------------------------------------------
+void Knight::setSwapKnifes( bool swap )
+{
+	pthread_mutex_lock(&mutex_);
+	need_swap_knifes_ = swap;
+	pthread_mutex_unlock(&mutex_);
+}
+//---------------------------------------------------------------------------------------
+bool Knight::needSwapKnifes()
+{
+	bool swap;
+	pthread_mutex_lock(&mutex_);
+	swap = need_swap_knifes_;
+	pthread_mutex_unlock(&mutex_);
+	return swap;
+}
+//---------------------------------------------------------------------------------------
+void Knight::setWaitingDifferentKnifes( bool waiting )
+{
+	pthread_mutex_lock(&mutex_);
+	waiting_knifes_ = waiting;
+	pthread_mutex_unlock(&mutex_);
+}
+//---------------------------------------------------------------------------------------
+bool Knight::isWaitingDifferentKnifes()
+{
+	bool waiting;
+	pthread_mutex_lock(&mutex_);
+	waiting = waiting_knifes_;
+	pthread_mutex_unlock(&mutex_);
+	return waiting;
 }
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )

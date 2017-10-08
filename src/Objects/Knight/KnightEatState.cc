@@ -40,12 +40,12 @@ void KnightEatState::step( Knight* knight )
 	// Поели, положили ножи на место
 	Place* place = getPlace(knight);
 	// Если нужно поменяли ножи местами
-	if( knight->needSwapKnifes() )
+	if( needSwapKnifes(knight) )
 	{
 		ostringstream os;
 		os << *knight << " swap knifes" << endl;
 		cout << os.str();
-		knight->setSwapKnifes( false );
+		resetSwapKnifes(knight);
 		place->swapKnifes();
 	}
 	place->putLeftKnife();
