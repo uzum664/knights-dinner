@@ -17,13 +17,43 @@ Knight::Knight( const std::string& name ) :
 	,has_permition_(false)
 	,hunger(1)
 	,place_(NULL)
+	,waiting_knifes_(false)
+	,need_swap_knifes_(false)
 {
+	int status = pthread_mutex_init(&mutex_, NULL);
+	if (status != 0) {
+		ostringstream os;
+		os << "Knife(): error: can't create mutex, status = " << status;
+		throw Exception( os.str() );
+	}
 	state_ = KnightWaitingState::Instance();
 	state_->activate(this);
 }
 //---------------------------------------------------------------------------------------
 Knight::~Knight()
 {
+	int status = pthread_mutex_destroy(&mutex_);
+	if (status != 0) {
+		ostringstream os;
+		os << "Knife(): error: can't destroy mutex, status = " << status;
+		throw Exception( os.str() );
+	}
+	// прерываем поток
+	if( running_ )
+	{
+		int status = pthread_cancel(thread_);
+		if( status != 0 )
+		{
+			ostringstream os;
+			os << "main(): error: can't cancel thread, status = " << status;
+			throw Exception( os.str() );
+		}
+	}
+	if( place_ )
+	{
+		place_->putLeftKnife();
+		place_->putRightKnife();
+	}
 }
 //---------------------------------------------------------------------------------------
 void Knight::lookFor(Knight* knight)
@@ -32,7 +62,7 @@ void Knight::lookFor(Knight* knight)
 	if( status != 0 )
 	{
 		ostringstream os;
-		os << "main(): error: can't join fknife_thread, status = " << status;
+		os << "main(): error: can't join thread, status = " << status;
 		throw Exception( os.str() );
 	}
 }
@@ -60,21 +90,61 @@ void Knight::run()
 //---------------------------------------------------------------------------------------
 void Knight::thread()
 {
-	while( hunger > 0 )
+	// поток рыцаря, он всегда что нибудь делает, поток будет прерван в деструкторе рыцаря
+	while( true )
 	{
-		// обернул в ostringstream что бы логи рыцарей не накладывались друг на друга
-		ostringstream os;
-		os << *this << " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << endl;
-		cout << os.str();
 		pthread_mutex_lock(&mutex_);
 		// Рыцарь выполняет действия в зависимости от состояния
 		state_->step(this);
 		pthread_mutex_unlock(&mutex_);
 		usleep( getPollTimeout() * 1000 ) ;
 	}
-	ostringstream os;
-	os << *this << " ends dinner ("<< " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << ")" << endl;
-	cout << os.str();
+}
+//---------------------------------------------------------------------------------------
+bool Knight::askSwapKnifes()
+{
+	pthread_mutex_lock(&mutex_);
+	if( !place_ )
+		return false;
+	if( !place_->isKnifesDifferent() )
+		return false;
+	need_swap_knifes_ = true;
+	pthread_mutex_unlock(&mutex_);
+	return true;
+}
+//---------------------------------------------------------------------------------------
+void Knight::resetWaitingDifferentKnifes()
+{
+	pthread_mutex_lock(&mutex_);
+	waiting_knifes_ = false;
+	pthread_mutex_unlock(&mutex_);
+}
+//---------------------------------------------------------------------------------------
+bool Knight::isWaitingDifferentKnifes()
+{
+	bool waiting;
+	pthread_mutex_lock(&mutex_);
+	waiting = waiting_knifes_;
+	pthread_mutex_unlock(&mutex_);
+	return waiting;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::isHungry()
+{
+	bool hungry;
+	pthread_mutex_lock(&mutex_);
+	hungry = hunger > 0;
+	pthread_mutex_unlock(&mutex_);
+	return hungry;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::toldStory()
+{
+	bool story;
+	pthread_mutex_lock(&mutex_);
+	story = story_num_ > 0;
+	pthread_mutex_unlock(&mutex_);
+	return story;
 }
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
