@@ -93,27 +93,29 @@ void Knight::thread()
 	// поток рыцаря, он всегда что нибудь делает, поток будет прерван в деструкторе рыцаря
 	while( true )
 	{
+		pthread_mutex_lock(&mutex_);
 		// Рыцарь выполняет действия в зависимости от состояния
 		state_->step(this);
+		pthread_mutex_unlock(&mutex_);
 		usleep( getPollTimeout() * 1000 ) ;
 	}
 }
 //---------------------------------------------------------------------------------------
 bool Knight::askSwapKnifes()
 {
+	pthread_mutex_lock(&mutex_);
 	if( !place_ )
 		return false;
 	if( !place_->isKnifesDifferent() )
 		return false;
 	setSwapKnifes( true );
+	pthread_mutex_unlock(&mutex_);
 	return true;
 }
 //---------------------------------------------------------------------------------------
 void Knight::setSwapKnifes( bool swap )
 {
-	pthread_mutex_lock(&mutex_);
 	need_swap_knifes_ = swap;
-	pthread_mutex_unlock(&mutex_);
 }
 //---------------------------------------------------------------------------------------
 bool Knight::needSwapKnifes()
@@ -143,25 +145,31 @@ bool Knight::isWaitingDifferentKnifes()
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
 {
+	pthread_mutex_lock(&mutex_);
 	// если забрали разрешение обедать переходим в ожидании
 	if( !permition && has_permition_ )
 		changeState( KnightWaitingState::Instance() );
 	has_permition_ = permition;
+	pthread_mutex_unlock(&mutex_);
 }
 //---------------------------------------------------------------------------------------
 bool Knight::putOn( Place* place )
 {
+	pthread_mutex_lock(&mutex_);
 	// если меняем место то переходим в ожидании -> оттуда попадем в переходный
 	changeState( KnightWaitingState::Instance() );
 	// освобождаем место если уже сидели
 	if( place_ )
 		place_->free();
+	place_ = NULL;
 	// пробуем занять место
 	if( place && place->take() )
 	{
 		place_ = place;
+		pthread_mutex_unlock(&mutex_);
 		return true;
 	}
+	pthread_mutex_unlock(&mutex_);
 	return false;
 }
 //---------------------------------------------------------------------------------------
