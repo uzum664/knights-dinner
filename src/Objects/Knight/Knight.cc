@@ -66,8 +66,10 @@ void Knight::thread()
 		ostringstream os;
 		os << *this << " hunger=" << hunger << " stories=" << story_num_ << " eatings=" << meal_num_ << endl;
 		cout << os.str();
+		pthread_mutex_lock(&mutex_);
 		// Рыцарь выполняет действия в зависимости от состояния
 		state_->step(this);
+		pthread_mutex_unlock(&mutex_);
 		usleep( getPollTimeout() * 1000 ) ;
 	}
 	ostringstream os;
@@ -77,23 +79,31 @@ void Knight::thread()
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
 {
+	pthread_mutex_lock(&mutex_);
 	// если забрали разрешение обедать переходим в ожидании
 	if( !permition && has_permition_ )
 		changeState( KnightWaitingState::Instance() );
 	has_permition_ = permition;
+	pthread_mutex_unlock(&mutex_);
 }
 //---------------------------------------------------------------------------------------
 bool Knight::putOn( Place* place )
 {
-	// если меняем место то переходим в ожидании -> оттуда поподем в переходный
+	pthread_mutex_lock(&mutex_);
+	// если меняем место то переходим в ожидании -> оттуда попадем в переходный
 	changeState( KnightWaitingState::Instance() );
 	// освобождаем место если уже сидели
 	if( place_ )
 		place_->free();
-	place_ = place;
+	place_ = NULL;
 	// пробуем занять место
-	if( place_ )
-		return place_->take();
+	if( place && place->take() )
+	{
+		place_ = place;
+		pthread_mutex_unlock(&mutex_);
+		return true;
+	}
+	pthread_mutex_unlock(&mutex_);
 	return false;
 }
 //---------------------------------------------------------------------------------------
