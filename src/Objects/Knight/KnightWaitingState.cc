@@ -33,9 +33,6 @@ void KnightWaitingState::step( Knight* knight )
 	// если не заняли место остаемся в ожидании
 	if( !hasPlace(knight) )
 		return;
-	// если нет разрешения обедать остаемся в ожидании
-	if( !hasPermision(knight) )
-		return;
 	
 	changeState( knight, KnightTransientState::Instance() );
 }

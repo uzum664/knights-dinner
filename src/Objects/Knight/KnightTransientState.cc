@@ -33,6 +33,12 @@ void KnightTransientState::step( Knight* knight )
 {
 	Place* place = getPlace(knight);
 	
+	// если нет разрешения обедать то болтаем
+	if( !hasPermision(knight) )
+	{
+		changeState( knight, KnightTalkState::Instance() );
+		return;
+	}
 	// если не голодны, болтаем
 	if( !isHungry(knight) )
 	{

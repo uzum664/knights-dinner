@@ -29,7 +29,10 @@ void SimpleDinner::start()
 {
 	cout << table << endl;
 	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	{
 		(*it)->permit(true);
+		(*it)->putOn(table->findFreePlace());
+	}
 }
 //---------------------------------------------------------------------------------------
 void SimpleDinner::stop()
@@ -43,7 +46,6 @@ bool SimpleDinner::addKnight( const std::string& name )
 	if( knights.size() >= place_num_ )
 		return false;
 	Knight* knight = new Knight( name );
-	knight->putOn(table->findFreePlace());
 	knight->run();
 	knights.push_back( knight );
 	return true;
