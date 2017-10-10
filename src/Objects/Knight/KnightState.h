@@ -34,7 +34,7 @@ class KnightState
 
 		virtual bool activate( Knight* knight );
 		virtual bool deactivate( Knight* knight );
-		virtual void step( Knight* knight ) {};
+		virtual void step( Knight* knight ) {}
 
 		virtual const std::string stateName()
 		{
@@ -50,10 +50,15 @@ class KnightState
 		KnightState* getState( Knight* knight );
 		void changeState( Knight* knight, KnightState* state );
 		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
+		bool hasPlace( Knight* knight ) const { return knight->place_ != NULL; } // Рыцарь занял место
+		bool hasPermision( Knight* knight ) const { return knight->has_permition_; } // есть разрешение
+		bool isHungry( Knight* knight ) const { return knight->hunger > 0; } // рыцарь голоден
+		bool toldStory( Knight* knight ) const { return knight->story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
 		void tellStory( Knight* knight ) { knight->story_num_++; } // рыцарь рассказывает историю
-		void eat( Knight* knight ) { knight->meal_num_++; knight->hunger--; }// рыцарь кушает
-		void resetSwapKnifes( Knight* knight ) { knight->setSwapKnifes(false); } // Сбросить флаг для смены ножей местами
-		bool needSwapKnifes( Knight* knight ) { return knight->needSwapKnifes(); } // Рыцарю нужно поменять ножи
+		void eat( Knight* knight ) { knight->meal_num_++; knight->hunger--; } // рыцарь кушает
+		void setWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = true; } // Выставить флаг ожидания ножей
+		void resetSwapKnifes( Knight* knight ) { knight->need_swap_knifes_ = false; } // Сбросить флаг для смены ножей местами
+		bool needSwapKnifes( Knight* knight ) { return knight->need_swap_knifes_; } // Рыцарю нужно поменять ножи
 
 	private:
 		static KnightState* inst_;

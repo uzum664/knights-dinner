@@ -34,8 +34,14 @@ void KnightTransientState::step( Knight* knight )
 {
 	Place* place = getPlace(knight);
 	
+	// если не голодны или рассказали хотя бы 1 историю, возвращаемся в ожидание
+	if( !isHungry(knight) && toldStory(knight) )
+	{
+		changeState( knight, KnightWaitingState::Instance() );
+		return;
+	}
 	// если не голодны, болтаем
-	if( !knight->isHungry() )
+	if( !isHungry(knight) )
 	{
 		changeState( knight, KnightTalkState::Instance() );
 		return;
@@ -49,7 +55,7 @@ void KnightTransientState::step( Knight* knight )
 		ostringstream os;
 		os << *knight << " ask for swapping knifes" << endl;
 		cout << os.str();
-		knight->setWaitingDifferentKnifes(true);
+		setWaitingDifferentKnifes(knight);
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}

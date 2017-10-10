@@ -33,14 +33,14 @@ void KnightWaitingState::Destroy()
 void KnightWaitingState::step( Knight* knight )
 {
 	// если не заняли место остаемся в ожидании
-	if( !knight->hasPlace() )
+	if( !hasPlace(knight) )
 		return;
 	// если нет разрешения обедать остаемся в ожидании
-	if( !knight->hasPermision() )
+	if( !hasPermision(knight) )
 		return;
 	
 	// если голодны или не рассказали хотя бы 1 историю 
-	if( knight->isHungry() || !knight->toldStory() )
+	if( isHungry(knight) || !toldStory(knight) )
 	{
 		changeState( knight, KnightTransientState::Instance() );
 		return;

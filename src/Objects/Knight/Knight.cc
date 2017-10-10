@@ -108,29 +108,15 @@ bool Knight::askSwapKnifes()
 		return false;
 	if( !place_->isKnifesDifferent() )
 		return false;
-	setSwapKnifes( true );
+	need_swap_knifes_ = true;
 	pthread_mutex_unlock(&mutex_);
 	return true;
 }
 //---------------------------------------------------------------------------------------
-void Knight::setSwapKnifes( bool swap )
-{
-	need_swap_knifes_ = swap;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::needSwapKnifes()
-{
-	bool swap;
-	pthread_mutex_lock(&mutex_);
-	swap = need_swap_knifes_;
-	pthread_mutex_unlock(&mutex_);
-	return swap;
-}
-//---------------------------------------------------------------------------------------
-void Knight::setWaitingDifferentKnifes( bool waiting )
+void Knight::resetWaitingDifferentKnifes()
 {
 	pthread_mutex_lock(&mutex_);
-	waiting_knifes_ = waiting;
+	waiting_knifes_ = false;
 	pthread_mutex_unlock(&mutex_);
 }
 //---------------------------------------------------------------------------------------
@@ -141,6 +127,24 @@ bool Knight::isWaitingDifferentKnifes()
 	waiting = waiting_knifes_;
 	pthread_mutex_unlock(&mutex_);
 	return waiting;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::isHungry()
+{
+	bool hungry;
+	pthread_mutex_lock(&mutex_);
+	hungry = hunger > 0;
+	pthread_mutex_unlock(&mutex_);
+	return hungry;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::toldStory()
+{
+	bool story;
+	pthread_mutex_lock(&mutex_);
+	story = story_num_ > 0;
+	pthread_mutex_unlock(&mutex_);
+	return story;
 }
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )

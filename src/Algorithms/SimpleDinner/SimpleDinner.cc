@@ -47,7 +47,7 @@ void SimpleDinner::loop()
 			// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
 			// если у соседей нашелся подходящий нож то флаг ожидания ножа сбрасываем
 			if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) )
-				(*it)->setWaitingDifferentKnifes(false);
+				(*it)->resetWaitingDifferentKnifes();
 			
 			prev = *it;
 		}

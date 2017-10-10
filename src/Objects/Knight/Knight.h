@@ -20,7 +20,9 @@ void* knight_thread( void* param );
 		- если взял оба ножа то может их поменять местами
 	Так как к рыцарю может быть осуществлен доступ из основного потока после вызова run() то в mutex_ обернуты:
 		- основной цикл рыцаря thread
-		- public методы меняющие состояния (permit, putOn...)
+		- public методы
+	В классах KnightState нельзя использовать public методы Knight, так как Knight гарантирует что при вызовах в KnightState уже залочен mutex_.
+	В классах KnightState можно использовать методы базового KnightState
 */
 
 class Knight
@@ -34,12 +36,10 @@ class Knight
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
 		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
-		void setWaitingDifferentKnifes( bool waiting ); // Выставить флаг ожидания ножей
+		void resetWaitingDifferentKnifes(); // Сбросить флаг ожидания ножей
 		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
-		bool isHungry() const { return hunger > 0; } // рыцарь голоден
-		bool toldStory() const { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
-		bool hasPlace() const { return place_ != NULL; } // Рыцарь занял место
-		bool hasPermision() const { return has_permition_; } // есть разрешение
+		bool isHungry(); // рыцарь голоден
+		bool toldStory(); // рыцарь рассказал хотя бы 1 историю
 		void permit( bool permition ); // разрешить кушать
 		bool putOn( Place* place ); // посадить рыцаря на место
 		void run(); // Запускает поток рыцаря
@@ -47,8 +47,6 @@ class Knight
 		
 	protected:
 		Knight(){}; // Безымянных рыцарей нету
-		void setSwapKnifes( bool swap ); // Выставить флаг для смены ножей местами
-		bool needSwapKnifes(); // Рыцарю нужно поменять ножи
 		
 		void changeState( KnightState* state ); // Смена состояния рыцаря
 		void thread(); // Поток рыцаря в котором он может брать/ложить ножи, кушать, рассказывать
