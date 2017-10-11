@@ -1,38 +1,26 @@
 #ifndef _SimpleDinner_H_
 #define _SimpleDinner_H_
 
-#include <list>
-#include <string>
+#include "Dinner.h"
 
 namespace knights
 {
 
-class Table;
-class Knight;
-
 /*!
-	Алгоритм обеда: 
-		- инициализирует стол
-		- добавляет рыцарей за стол
-		- выдает разрешения 
+	Алгоритм простого обеда: 
+		на каждый шаг проверяем хватаетли рыцарю обоих ножей, если нет, то запрашиваем их у соседа, если у него есть оба ножа (сначала у предыдущего соседа, потом у следующего)
 */
 
-class SimpleDinner
+class SimpleDinner :
+	public Dinner
 {
 	public:
 		SimpleDinner( const int& num = 5 );
 		virtual ~SimpleDinner();
-		void loop(); // цикл обеда
-		void start(); // начать обед ( просто выдаем разрешение рыцарем кушать ) 
-		void stop(); // остановить обед ( отбираем разрешение )
-		bool addKnight( const std::string& name ); // добавить рыцаря и посадить за стол
+		virtual void step(); // шаг обеда
 	protected:
 		
 	private:
-		Table* table; // стол
-		int place_num_; // кол-во мест за столом
-		typedef std::list<Knight*> Knights;
-		Knights knights; // список рыцарей
 };
 
 }

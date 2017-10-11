@@ -1,87 +1,39 @@
 #include "SimpleDinner.h"
-#include "Table/Table.h"
 #include "Knight/Knight.h"
-#include <unistd.h>
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
 //---------------------------------------------------------------------------------------
 SimpleDinner::SimpleDinner( const int& num ) :
-	place_num_(num)
+	Dinner(num)
 {
-	table = Table::Instance(5);
 }
 //---------------------------------------------------------------------------------------
 SimpleDinner::~SimpleDinner()
 {
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		if( *it )
-			delete *it;
 }
 //---------------------------------------------------------------------------------------
-void SimpleDinner::loop()
+void SimpleDinner::step()
 {
-	while( true )
-	{
-		bool anyoneHungry = false;
-		bool someoneNotToldStory = false;
-		
-		Knight* prev = knights.back();
-		Knight* next = NULL;
-		for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		{
-			Knights::iterator nextIt = it;
-			nextIt++;
-			if( nextIt == knights.end() )
-				next = knights.front();
-			else
-				next = *nextIt;
-			
-			// проверяем что хоть кто то голоден
-			if( (*it)->isHungry() )
-				anyoneHungry = true;
-			// проверяем что хоть кто то не расказывал историю
-			if( !(*it)->toldStory() )
-				someoneNotToldStory = true;
-			
-			// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
-			// если у соседей нашелся подходящий нож то флаг ожидания ножа сбрасываем
-			if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) )
-				(*it)->resetWaitingDifferentKnifes();
-			
-			prev = *it;
-		}
-		
-		if( !anyoneHungry && !someoneNotToldStory )
-			break;
-		
-		usleep(100000);
-	}
-}
-//---------------------------------------------------------------------------------------
-void SimpleDinner::start()
-{
-	cout << table << endl;
+	// считаем что рыцари сидят по порядку
+	// пока рассадка идет через вызов table->findFreePlace() который должен выдавать по порядку
+	Knight* prev = knights.back();
+	Knight* next = NULL;
 	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
 	{
-		(*it)->permit(true);
-		(*it)->putOn(table->findFreePlace());
+		Knights::iterator nextIt = it;
+		nextIt++;
+		if( nextIt == knights.end() )
+			next = knights.front();
+		else
+			next = *nextIt;
+		
+		// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
+		// если у соседей нашелся подходящий нож то флаг ожидания ножа сбрасываем
+		if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) )
+			(*it)->resetWaitingDifferentKnifes();
+		
+		prev = *it;
 	}
-}
-//---------------------------------------------------------------------------------------
-void SimpleDinner::stop()
-{
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		(*it)->permit(false);
-}
-//---------------------------------------------------------------------------------------
-bool SimpleDinner::addKnight( const std::string& name )
-{
-	if( knights.size() >= place_num_ )
-		return false;
-	Knight* knight = new Knight( name );
-	knight->run();
-	knights.push_back( knight );
-	return true;
 }
 //---------------------------------------------------------------------------------------

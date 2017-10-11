@@ -48,6 +48,7 @@ AC_CONFIG_FILES([Makefile
 				 src/Objects/Knight/Makefile
 				 src/Objects/Knife/Makefile
 				 src/Algorithms/Makefile
+				 src/Algorithms/Dinner/Makefile
 				 src/Algorithms/SimpleDinner/Makefile
 				 src/GUI/Makefile
 				 lib/Various/Makefile
