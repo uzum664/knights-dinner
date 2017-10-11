@@ -60,7 +60,7 @@ class Knight
 		std::string name_; // Имя рыцаря
 		KnightState* state_; // Состояние рыцаря
 		bool has_right_knife_; // Нож cправа взят в руке
-		bool has_lelt_knife_; // Нож слева взят в руке
+		bool has_left_knife_; // Нож слева взят в руке
 		unsigned int meal_num_; // Количество приемов пищи
 		unsigned int story_num_; // Количество рассказанных историй
 		bool has_permition_; // есть разрешение начать обед

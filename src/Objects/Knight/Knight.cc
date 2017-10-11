@@ -11,7 +11,7 @@ Knight::Knight( const std::string& name ) :
 	running_(false)
 	,name_(name)
 	,has_right_knife_(false)
-	,has_lelt_knife_(false)
+	,has_left_knife_(false)
 	,meal_num_(0)
 	,story_num_(0)
 	,has_permition_(false)

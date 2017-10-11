@@ -49,7 +49,6 @@ class KnightState
 		KnightState();
 		KnightState* getState( Knight* knight );
 		void changeState( Knight* knight, KnightState* state );
-		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
 		bool hasPlace( Knight* knight ) const { return knight->place_ != NULL; } // Рыцарь занял место
 		bool hasPermision( Knight* knight ) const { return knight->has_permition_; } // есть разрешение
 		bool isHungry( Knight* knight ) const { return knight->hunger > 0; } // рыцарь голоден
@@ -57,10 +56,15 @@ class KnightState
 		void tellStory( Knight* knight ) { knight->story_num_++; } // рыцарь рассказывает историю
 		void eat( Knight* knight ) { knight->meal_num_++; knight->hunger--; } // рыцарь кушает
 		void setWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = true; } // Выставить флаг ожидания ножей
-		void resetSwapKnifes( Knight* knight ) { knight->need_swap_knifes_ = false; } // Сбросить флаг для смены ножей местами
+		//void resetSwapKnifes( Knight* knight ) { knight->need_swap_knifes_ = false; } // Сбросить флаг для смены ножей местами
 		bool needSwapKnifes( Knight* knight ) { return knight->need_swap_knifes_; } // Рыцарю нужно поменять ножи
+		bool swapKnifes( Knight* knight ); // Пробуем поменять ножи
+		bool takeKnifes( Knight* knight ); // Пробуем взять ножи
+		bool putKnifes( Knight* knight ); // Положить ножи
+		bool isKnifesDifferent( Knight* knight ); // Разные ножи?
 
 	private:
+		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
 		static KnightState* inst_;
 };
 // ---------------------------------------------------------------------------

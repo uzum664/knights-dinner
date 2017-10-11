@@ -1,6 +1,5 @@
 #include "Knight.h"
 #include "KnightState.h"
-#include "Place.h"
 #include <unistd.h>
 // -------------------------------------------------------------------------
 using namespace std;

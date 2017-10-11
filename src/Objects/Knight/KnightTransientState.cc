@@ -1,6 +1,5 @@
 #include "Knight.h"
 #include "KnightState.h"
-#include "Place.h"
 #include <sstream>
 // -------------------------------------------------------------------------
 using namespace std;
@@ -32,8 +31,6 @@ void KnightTransientState::Destroy()
 // ---------------------------------------------------------------------------
 void KnightTransientState::step( Knight* knight )
 {
-	Place* place = getPlace(knight);
-	
 	// если не голодны или рассказали хотя бы 1 историю, возвращаемся в ожидание
 	if( !isHungry(knight) && toldStory(knight) )
 	{
@@ -53,11 +50,9 @@ void KnightTransientState::step( Knight* knight )
 		return;
 	}
 	// если ножи одинаковые, болтаем
-	if( !place->isKnifesDifferent() )
+	if( !isKnifesDifferent(knight) )
 	{
 		// запрашиваем соседей на смену ножей
-		// place->queryOtherLeftKnife();
-		// place->queryOtherRightKnife();
 		ostringstream os;
 		os << *knight << " ask for swapping knifes" << endl;
 		cout << os.str();
@@ -65,20 +60,14 @@ void KnightTransientState::step( Knight* knight )
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
-	// если левый нож занят, болтаем
-	if( !place->takeLeftKnife() )
+	
+	// если не смогли взять ножи, болтаем
+	if( !takeKnifes(knight) )
 	{
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
-	// если правый нож занят, болтаем
-	if( !place->takeRightKnife() )
-	{
-		place->putLeftKnife();
-		changeState( knight, KnightTalkState::Instance() );
-		return;
-	}
-	  
+	
 	changeState( knight, KnightEatState::Instance() );
 }
 // ---------------------------------------------------------------------------

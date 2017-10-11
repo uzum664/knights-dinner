@@ -1,6 +1,5 @@
 #include "Knight.h"
 #include "KnightState.h"
-#include "Place.h"
 #include <sstream>
 // -------------------------------------------------------------------------
 using namespace std;
@@ -43,26 +42,14 @@ void KnightWaitingState::step( Knight* knight )
 		return;
 	}
 	
-	Place* place = getPlace(knight);
 	// Если нужно поменяли ножи местами
 	if( !needSwapKnifes(knight) )
 		return;
 	
-	// пытаемся взять ножи
-	if( !place->takeLeftKnife() )
+	if( !takeKnifes(knight) )
 		return;
+	swapKnifes(knight);
+	putKnifes(knight);
 	
-	if( !place->takeRightKnife() )
-	{
-		place->putLeftKnife();
-		return;
-	}
-	ostringstream os;
-	os << *knight << " swap knifes" << endl;
-	cout << os.str();
-	resetSwapKnifes(knight);
-	place->swapKnifes();
-	place->putLeftKnife();
-	place->putRightKnife();
 }
 // ---------------------------------------------------------------------------
