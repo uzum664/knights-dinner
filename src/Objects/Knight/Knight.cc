@@ -200,9 +200,6 @@ bool Knight::toldStory()
 void Knight::permit( bool permition )
 {
 	pthread_mutex_lock(&mutex_);
-	// если забрали разрешение обедать переходим в ожидании
-	if( !permition && has_permition_ )
-		changeState( KnightWaitingState::Instance() );
 	has_permition_ = permition;
 	pthread_mutex_unlock(&mutex_);
 }
