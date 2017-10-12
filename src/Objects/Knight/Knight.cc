@@ -8,14 +8,14 @@ using namespace std;
 using namespace knights;
 //---------------------------------------------------------------------------------------
 Knight::Knight( const std::string& name ) :
-	running_(false)
+	hunger_(1)
+	,running_(false)
 	,name_(name)
 	,has_right_knife_(false)
 	,has_left_knife_(false)
 	,meal_num_(0)
 	,story_num_(0)
 	,has_permition_(false)
-	,hunger(1)
 	,place_(NULL)
 	,waiting_knifes_(false)
 	,need_swap_knifes_(false)
@@ -101,6 +101,15 @@ void Knight::thread()
 	}
 }
 //---------------------------------------------------------------------------------------
+std::string Knight::textStatistic()
+{
+	ostringstream os;
+	pthread_mutex_lock(&mutex_);
+	os << *this << ": hunger=" << hunger_ << ": meals=" << meal_num_ << ": stories=" << story_num_;
+	pthread_mutex_unlock(&mutex_);
+	return os.str();
+}
+//---------------------------------------------------------------------------------------
 bool Knight::askSwapKnifes()
 {
 	pthread_mutex_lock(&mutex_);
@@ -133,7 +142,7 @@ bool Knight::isHungry()
 {
 	bool hungry;
 	pthread_mutex_lock(&mutex_);
-	hungry = hunger > 0;
+	hungry = hunger_ > 0;
 	pthread_mutex_unlock(&mutex_);
 	return hungry;
 }

@@ -2,6 +2,7 @@
 #include "Table/Table.h"
 #include "Knight/Knight.h"
 #include <unistd.h>
+#include <sstream>
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -21,6 +22,7 @@ Dinner::~Dinner()
 //---------------------------------------------------------------------------------------
 void Dinner::loop()
 {
+	int prev = time(NULL);
 	while( true )
 	{
 		step();
@@ -39,6 +41,17 @@ void Dinner::loop()
 		
 		if( !anyoneHungry && !someoneNotToldStory )
 			break;
+		
+		int now = time(NULL);
+		
+		if( ( prev + 10000000 ) > now )
+		{
+			ostringstream os;
+			for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+				os << (*it)->textStatistic() << endl;
+			cout << os.str();
+			prev = now;
+		}
 		
 		usleep(100000);
 	}
@@ -63,7 +76,7 @@ void Dinner::stop()
 //---------------------------------------------------------------------------------------
 bool Dinner::addKnight( const std::string& name )
 {
-	if( knights.size() >= place_num_ )
+	if( knights.size() >= getPlaceNum() )
 		return false;
 	Knight* knight = new Knight( name );
 	knight->run();

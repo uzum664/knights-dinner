@@ -21,7 +21,7 @@ void* knight_thread( void* param );
 	Так как к рыцарю может быть осуществлен доступ из основного потока после вызова run() то в mutex_ обернуты:
 		- основной цикл рыцаря thread
 		- public методы
-	В классах KnightState нельзя использовать public методы Knight, так как Knight гарантирует что при вызовах в KnightState уже залочен mutex_.
+	В классах KnightState нельзя использовать public методы Knight, так как Knight должен гарантировать что при вызовах в KnightState mutex_ уже залочен.
 	В классах KnightState можно использовать методы базового KnightState
 */
 
@@ -35,6 +35,7 @@ class Knight
 		int getTalkTimeout() { return 10000; } // время на рассказ, мс
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
+		std::string textStatistic(); // Статистика рыцаря
 		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
 		void resetWaitingDifferentKnifes(); // Сбросить флаг ожидания ножей
 		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
@@ -48,12 +49,17 @@ class Knight
 	protected:
 		Knight(){}; // Безымянных рыцарей нету
 		
+		virtual void tellStory() { story_num_++; } // рыцарь рассказать историю
+		virtual void eat() { meal_num_++; hunger_--; } // поесть
 		void changeState( KnightState* state ); // Смена состояния рыцаря
 		void thread(); // Поток рыцаря в котором он может брать/ложить ножи, кушать, рассказывать
 		friend void* knight_thread( void* param );
+		
 		friend std::ostream& operator<<(std::ostream& os, Knight& knight );
 		friend std::ostream& operator<<(std::ostream& os, Knight* knight );
 		friend class KnightState;
+		
+		int hunger_; // голод рыцаря
 		
 	private:
 		bool running_; // флаг что уже запущен поток
@@ -64,7 +70,6 @@ class Knight
 		unsigned int meal_num_; // Количество приемов пищи
 		unsigned int story_num_; // Количество рассказанных историй
 		bool has_permition_; // есть разрешение начать обед
-		int hunger; // голод рыцаря
 		Place* place_; // Место за столом
 		bool waiting_knifes_; // флаг ожидания ножей
 		bool need_swap_knifes_; // флаг для смены ножей

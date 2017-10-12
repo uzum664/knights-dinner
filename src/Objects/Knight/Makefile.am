@@ -5,7 +5,7 @@ libKnight_la_CXXFLAGS	= \
 libKnight_la_LIBS	= \
 	$(top_builddir)/lib/lib@PACKAGE@.la \
 	../Table/libTable.la
-libKnight_la_SOURCES	= KnightState.cc KnightWaitingState.cc KnightTransientState.cc KnightTalkState.cc KnightEatState.cc Knight.cc
+libKnight_la_SOURCES	= KnightState.cc KnightWaitingState.cc KnightTransientState.cc KnightTalkState.cc KnightEatState.cc Knight.cc HungryKnight.cc
 
 noinst_PROGRAMS = knight
 
