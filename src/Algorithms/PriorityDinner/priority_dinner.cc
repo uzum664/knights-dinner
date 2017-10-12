@@ -12,11 +12,11 @@ int main(int argc, char **argv)
 	try
 	{
 		PriorityDinner dinner;
-		dinner.addKnight("Артур");
-		dinner.addKnight("Ричард");
-		dinner.addKnight("Ланселот");
-		dinner.addKnight("Робин");
-		dinner.addKnight("Гивеон");
+		dinner.addHungryKnight("   Артур");
+		dinner.addHungryKnight("  Ричард");
+		dinner.addHungryKnight("Ланселот");
+		dinner.addHungryKnight("   Робин");
+		dinner.addHungryKnight("  Гивеон");
 		dinner.start();
 	}
 	catch(std::exception& ex)

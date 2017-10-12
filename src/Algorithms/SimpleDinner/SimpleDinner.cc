@@ -29,9 +29,7 @@ void SimpleDinner::step()
 			next = *nextIt;
 		
 		// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
-		// если у соседей нашелся подходящий нож то флаг ожидания ножа сбрасываем
-		if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) )
-			(*it)->resetWaitingDifferentKnifes();
+		if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) );
 		
 		prev = *it;
 	}

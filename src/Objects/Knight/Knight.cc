@@ -129,13 +129,6 @@ bool Knight::askSwapKnifes()
 	return true;
 }
 //---------------------------------------------------------------------------------------
-void Knight::resetWaitingDifferentKnifes()
-{
-	pthread_mutex_lock(&mutex_);
-	waiting_knifes_ = false;
-	pthread_mutex_unlock(&mutex_);
-}
-//---------------------------------------------------------------------------------------
 bool Knight::isWaitingDifferentKnifes()
 {
 	bool waiting;
@@ -143,6 +136,41 @@ bool Knight::isWaitingDifferentKnifes()
 	waiting = waiting_knifes_;
 	pthread_mutex_unlock(&mutex_);
 	return waiting;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::hasDifferentKnifes()
+{
+	pthread_mutex_lock(&mutex_);
+	if( !place_ )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	if( !place_->isKnifesDifferent() )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	pthread_mutex_unlock(&mutex_);
+	return true;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::hasPermision()
+{
+	bool permition;
+	pthread_mutex_lock(&mutex_);
+	permition = has_permition_;
+	pthread_mutex_unlock(&mutex_);
+	return permition;
+}
+//---------------------------------------------------------------------------------------
+int Knight::getHunger()
+{
+	int hunger;
+	pthread_mutex_lock(&mutex_);
+	hunger = hunger_;
+	pthread_mutex_unlock(&mutex_);
+	return hunger;
 }
 //---------------------------------------------------------------------------------------
 bool Knight::isHungry()

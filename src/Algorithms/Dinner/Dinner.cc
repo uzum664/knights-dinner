@@ -1,6 +1,6 @@
 #include "Dinner.h"
 #include "Table/Table.h"
-#include "Knight/Knight.h"
+#include "Knight/HungryKnight.h"
 #include <unistd.h>
 #include <sstream>
 //---------------------------------------------------------------------------------------
@@ -22,7 +22,8 @@ Dinner::~Dinner()
 //---------------------------------------------------------------------------------------
 void Dinner::loop()
 {
-	int prev = time(NULL);
+	int begin = time(NULL);
+	int prev = begin;
 	while( true )
 	{
 		step();
@@ -44,7 +45,7 @@ void Dinner::loop()
 		
 		int now = time(NULL);
 		
-		if( ( prev + 10000000 ) > now )
+		if( ( prev + 3 ) <= now )
 		{
 			ostringstream os;
 			for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
@@ -55,6 +56,9 @@ void Dinner::loop()
 		
 		usleep(100000);
 	}
+	ostringstream os;
+	os << "Dinner ends in " << ( time(NULL) - begin ) << " sec" << endl;
+	cout << os.str();
 }
 //---------------------------------------------------------------------------------------
 void Dinner::start()
@@ -79,6 +83,16 @@ bool Dinner::addKnight( const std::string& name )
 	if( knights.size() >= getPlaceNum() )
 		return false;
 	Knight* knight = new Knight( name );
+	knight->run();
+	knights.push_back( knight );
+	return true;
+}
+//---------------------------------------------------------------------------------------
+bool Dinner::addHungryKnight( const std::string& name )
+{
+	if( knights.size() >= getPlaceNum() )
+		return false;
+	Knight* knight = new HungryKnight( name, 10, 0.25 );
 	knight->run();
 	knights.push_back( knight );
 	return true;

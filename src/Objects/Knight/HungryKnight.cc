@@ -5,7 +5,7 @@ using namespace knights;
 //---------------------------------------------------------------------------------------
 HungryKnight::HungryKnight( const std::string& name, const int& hunger, const double& power ) :
 	Knight(name)
-	,hunger_power_(power)
+	,hunger_power_( (power > 0) ? power : 0.01)
 {
 	hunger_ = hunger;
 }

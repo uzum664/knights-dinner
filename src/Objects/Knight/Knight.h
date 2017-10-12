@@ -37,8 +37,10 @@ class Knight
 		
 		std::string textStatistic(); // Статистика рыцаря
 		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
-		void resetWaitingDifferentKnifes(); // Сбросить флаг ожидания ножей
 		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
+		bool hasDifferentKnifes(); // У рыцаря есть подходящие ножи
+		bool hasPermision(); // есть разрешение
+		int getHunger(); // Уровень голода рыцаря
 		bool isHungry(); // рыцарь голоден
 		bool toldStory(); // рыцарь рассказал хотя бы 1 историю
 		void permit( bool permition ); // разрешить кушать
