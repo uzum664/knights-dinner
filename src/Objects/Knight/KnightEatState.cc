@@ -30,6 +30,24 @@ void KnightEatState::Destroy()
 	inst_ = NULL;
 }
 // ---------------------------------------------------------------------------
+bool KnightEatState::activate( Knight* knight )
+{
+	// если не смогли взять ножи (кто то успел раньше?)
+	if( !takeKnifes(knight) )
+		return false;
+	
+	ostringstream os;
+	os << knight << "::activate()" <<  endl;
+	cout << os.str();
+	return true;
+}
+// ---------------------------------------------------------------------------
+bool KnightEatState::deactivate( Knight* knight )
+{
+	putKnifes(knight);
+	return true;
+}
+// ---------------------------------------------------------------------------
 void KnightEatState::step( Knight* knight )
 {
 	eat(knight);
@@ -40,7 +58,6 @@ void KnightEatState::step( Knight* knight )
 	// Если нужно поменяли ножи местами
 	if( needSwapKnifes(knight) )
 		swapKnifes(knight);
-	putKnifes(knight);
 	  
 	changeState( knight, KnightTransientState::Instance() );
 }

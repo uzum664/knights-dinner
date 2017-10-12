@@ -26,6 +26,8 @@ class Place
 		bool isKnifesDifferent() const; // проверить что ножи разные
 		Table::Knifes::iterator getLeftKnife() const; // Получить итератор на левый нож
 		Table::Knifes::iterator getRightKnife() const; // Получить итератор на правый нож
+		bool isLeftKnifeTaken() const; // Проверить, что левый нож взят со стола
+		bool isRightKnifeTaken() const; // Проверить, что правый нож взят со стола
 		bool takeLeftKnife() const; // Взять левый нож со стола
 		bool takeRightKnife() const; // Взять правый нож со стола
 		bool putLeftKnife() const; // Положить левый нож на стол

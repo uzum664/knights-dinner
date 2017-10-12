@@ -185,11 +185,14 @@ void Knight::changeState( KnightState* state )
 	try
 	{
 		old->deactivate(this);
-		state->activate(this);
+		if( !state_->activate(this) )
+			throw Exception("activate failed!");
 	}
 	catch (Exception& ex)
 	{
-		cerr << (*this) << "(changeState): " << ex.what() << endl;
+		ostringstream os;
+		os << (*this) << "(changeState): " << ex.what() << endl;
+		cerr << os.str();
 		state_ = old;
 		state_->activate(this);
 	}

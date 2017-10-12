@@ -53,6 +53,14 @@ KnightState* KnightState::getState( Knight* knight )
 	return knight->state_;
 }
 // ---------------------------------------------------------------------------
+bool KnightState::isKnifesAvailable( Knight* knight )
+{
+	Place* place = getPlace(knight);
+	if( place->isLeftKnifeTaken() || place->isRightKnifeTaken() )
+		return false;
+	return true;
+}
+// ---------------------------------------------------------------------------
 bool KnightState::isKnifesDifferent( Knight* knight )
 {
 	Place* place = getPlace(knight);

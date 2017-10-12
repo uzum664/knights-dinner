@@ -47,6 +47,16 @@ Table::Knifes::iterator Place::getRightKnife() const
 	return right_knife_;
 }
 //---------------------------------------------------------------------------------------
+bool Place::isLeftKnifeTaken() const
+{
+	return (*left_knife_)->isTaken();
+}
+//---------------------------------------------------------------------------------------
+bool Place::isRightKnifeTaken() const
+{
+	return (*right_knife_)->isTaken();
+}
+//---------------------------------------------------------------------------------------
 bool Place::takeLeftKnife() const
 {
 	return table_->take(left_knife_);

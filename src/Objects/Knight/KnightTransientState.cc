@@ -61,8 +61,8 @@ void KnightTransientState::step( Knight* knight )
 		return;
 	}
 	
-	// если не смогли взять ножи, болтаем
-	if( !takeKnifes(knight) )
+	// если ножи заняты, болтаем
+	if( !isKnifesAvailable(knight) )
 	{
 		changeState( knight, KnightTalkState::Instance() );
 		return;

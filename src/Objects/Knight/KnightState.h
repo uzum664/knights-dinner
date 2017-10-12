@@ -62,6 +62,7 @@ class KnightState
 		bool takeKnifes( Knight* knight ); // Пробуем взять ножи
 		bool putKnifes( Knight* knight ); // Положить ножи
 		bool isKnifesDifferent( Knight* knight ); // Разные ножи?
+		bool isKnifesAvailable( Knight* knight ); // Ножи не заняты?
 
 	private:
 		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
@@ -139,6 +140,8 @@ class KnightEatState:
 		void Destroy();
 		virtual ~KnightEatState();
 
+		virtual bool activate( Knight* knight );
+		virtual bool deactivate( Knight* knight );
 		virtual void step( Knight* knight );
 		virtual const std::string stateName()
 		{
