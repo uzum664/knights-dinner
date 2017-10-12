@@ -31,8 +31,8 @@ class Knight
 		Knight( const std::string& name );
 		virtual ~Knight();
 		
-		int getEatTimeout() { return 10000; } // время на поесть, мс
-		int getTalkTimeout() { return 10000; } // время на рассказ, мс
+		int getEatTimeout() { return 3; } // время на поесть, с
+		int getTalkTimeout() { return 3; } // время на рассказ, с
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
 		std::string textStatistic(); // Статистика рыцаря
@@ -73,6 +73,7 @@ class Knight
 		Place* place_; // Место за столом
 		bool waiting_knifes_; // флаг ожидания ножей
 		bool need_swap_knifes_; // флаг для смены ножей
+		time_t state_timeout_; // время окончания состояния (для Eat и Talk)
 		pthread_mutex_t mutex_; // mutex доступа к рыцарю
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;

@@ -56,13 +56,16 @@ class KnightState
 		void tellStory( Knight* knight ) { knight->tellStory(); } // рыцарь рассказывает историю
 		void eat( Knight* knight ) { knight->eat(); } // рыцарь кушает
 		void setWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = true; } // Выставить флаг ожидания ножей
-		//void resetSwapKnifes( Knight* knight ) { knight->need_swap_knifes_ = false; } // Сбросить флаг для смены ножей местами
+		void resetWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = false; } // Сбросить флаг ожидания ножей
+		bool isWaitingDifferentKnifes( Knight* knight ) { return knight->waiting_knifes_; } // Рыцарь ждет подходящих ножей
 		bool needSwapKnifes( Knight* knight ) { return knight->need_swap_knifes_; } // Рыцарю нужно поменять ножи
 		bool swapKnifes( Knight* knight ); // Пробуем поменять ножи
 		bool takeKnifes( Knight* knight ); // Пробуем взять ножи
 		bool putKnifes( Knight* knight ); // Положить ножи
 		bool isKnifesDifferent( Knight* knight ); // Разные ножи?
 		bool isKnifesAvailable( Knight* knight ); // Ножи не заняты?
+		void setStateEndTime( Knight* knight, const time_t& time ) { knight->state_timeout_ = time; } // выставляем время окончания состояния
+		bool isStateEndTime( Knight* knight, const time_t& time ) { return ( time >= knight->state_timeout_ ); } // проверяем время окончания состояния
 
 	private:
 		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
@@ -119,6 +122,8 @@ class KnightTalkState:
 		void Destroy();
 		virtual ~KnightTalkState();
 
+		virtual bool activate( Knight* knight );
+		virtual bool deactivate( Knight* knight );
 		virtual void step( Knight* knight );
 		virtual const std::string stateName()
 		{

@@ -36,6 +36,12 @@ bool KnightEatState::activate( Knight* knight )
 	if( !takeKnifes(knight) )
 		return false;
 	
+	// едим сначала, что бы алгоритму было проще подсчитывать приоритеты
+	eat(knight);
+	
+	// выставляем время окончания приема пищи
+	setStateEndTime( knight, time(NULL) + knight->getEatTimeout() );
+	
 	ostringstream os;
 	os << knight << "::activate()" <<  endl;
 	cout << os.str();
@@ -44,21 +50,22 @@ bool KnightEatState::activate( Knight* knight )
 // ---------------------------------------------------------------------------
 bool KnightEatState::deactivate( Knight* knight )
 {
+	// Поели, положили ножи на место
+	// Если нужно поменяли ножи местами
+	if( needSwapKnifes(knight) )
+		swapKnifes(knight);
+	
 	putKnifes(knight);
 	return true;
 }
 // ---------------------------------------------------------------------------
 void KnightEatState::step( Knight* knight )
 {
-	eat(knight);
-	
-	usleep( knight->getEatTimeout() * 1000 ) ;
-	
-	// Поели, положили ножи на место
-	// Если нужно поменяли ножи местами
-	if( needSwapKnifes(knight) )
-		swapKnifes(knight);
-	  
-	changeState( knight, KnightTransientState::Instance() );
+	// проверяем кончилась ли еда
+	if( isStateEndTime( knight, time(NULL) ) )
+	{
+		changeState( knight, KnightTransientState::Instance() );
+		return;
+	}
 }
 // ---------------------------------------------------------------------------

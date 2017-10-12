@@ -52,11 +52,6 @@ void KnightTransientState::step( Knight* knight )
 	// если ножи одинаковые, болтаем
 	if( !isKnifesDifferent(knight) )
 	{
-		// запрашиваем соседей на смену ножей
-		ostringstream os;
-		os << *knight << " ask for swapping knifes" << endl;
-		cout << os.str();
-		setWaitingDifferentKnifes(knight);
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
