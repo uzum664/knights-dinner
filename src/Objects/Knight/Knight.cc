@@ -105,7 +105,8 @@ std::string Knight::textStatistic()
 {
 	ostringstream os;
 	pthread_mutex_lock(&mutex_);
-	os << *this << ": hunger=" << hunger_ << ": meals=" << meal_num_ << ": stories=" << story_num_;
+	os << *this << ":\thunger=" << hunger_ << "\t meals=" << meal_num_ << "\tstories=" << story_num_ << "\tpermition=" << has_permition_;
+	os << "\tleft=" << has_left_knife_ << "\t right=" << has_right_knife_ << "\twaiting=" << waiting_knifes_ << "\tneed_swap=" << need_swap_knifes_;
 	pthread_mutex_unlock(&mutex_);
 	return os.str();
 }
@@ -114,9 +115,15 @@ bool Knight::askSwapKnifes()
 {
 	pthread_mutex_lock(&mutex_);
 	if( !place_ )
+	{
+		pthread_mutex_unlock(&mutex_);
 		return false;
+	}
 	if( !place_->isKnifesDifferent() )
+	{
+		pthread_mutex_unlock(&mutex_);
 		return false;
+	}
 	need_swap_knifes_ = true;
 	pthread_mutex_unlock(&mutex_);
 	return true;

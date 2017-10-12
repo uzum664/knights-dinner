@@ -91,6 +91,8 @@ bool KnightState::putKnifes( Knight* knight )
 	Place* place = getPlace(knight);
 	place->putLeftKnife();
 	place->putRightKnife();
+	knight->has_left_knife_ = false;
+	knight->has_right_knife_ = false;
 	return true;
 }
 // ---------------------------------------------------------------------------
