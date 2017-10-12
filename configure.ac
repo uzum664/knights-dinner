@@ -50,6 +50,7 @@ AC_CONFIG_FILES([Makefile
 				 src/Algorithms/Makefile
 				 src/Algorithms/Dinner/Makefile
 				 src/Algorithms/SimpleDinner/Makefile
+				 src/Algorithms/HungrySimpleDinner/Makefile
 				 src/Algorithms/PriorityDinner/Makefile
 				 src/GUI/Makefile
 				 lib/Various/Makefile
