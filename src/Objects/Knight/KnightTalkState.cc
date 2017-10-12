@@ -50,12 +50,6 @@ bool KnightTalkState::deactivate( Knight* knight )
 	if( isKnifesDifferent(knight) )
 		resetWaitingDifferentKnifes(knight);
 	
-	// Поели, положили ножи на место
-	// Если нужно поменяли ножи местами
-	if( needSwapKnifes(knight) )
-		swapKnifes(knight);
-	
-	putKnifes(knight);
 	return true;
 }
 // ---------------------------------------------------------------------------
