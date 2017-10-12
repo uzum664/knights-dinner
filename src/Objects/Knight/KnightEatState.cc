@@ -40,7 +40,10 @@ bool KnightEatState::activate( Knight* knight )
 	eat(knight);
 	
 	// выставляем время окончания приема пищи
-	setStateEndTime( knight, time(NULL) + knight->getEatTimeout() );
+	setStateEndTime( knight, time(NULL) + getEatTimeout(knight) );
+	
+	// сбрасываем флаг, чтоб иметь возможность поменять ножи
+	resetSwappedKnifes(knight);
 	
 	ostringstream os;
 	os << knight << "::activate()" <<  endl;

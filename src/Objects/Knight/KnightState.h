@@ -44,6 +44,10 @@ class KnightState
 		{
 			return os;
 		}
+		
+		int getWaitingTimeout( Knight* knight ) { return 3; } // время на ожидание, с
+		int getEatTimeout( Knight* knight ) { return 3; } // время на поесть, с
+		int getTalkTimeout( Knight* knight ) { return 3; } // время на рассказ, с
 
 	protected:
 		KnightState();
@@ -59,6 +63,7 @@ class KnightState
 		void resetWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = false; } // Сбросить флаг ожидания ножей
 		bool isWaitingDifferentKnifes( Knight* knight ) { return knight->waiting_knifes_; } // Рыцарь ждет подходящих ножей
 		bool needSwapKnifes( Knight* knight ) { return knight->need_swap_knifes_; } // Рыцарю нужно поменять ножи
+		void resetSwappedKnifes( Knight* knight ) { knight->swapped_knifes_ = false; } // Сбросить флаг смены ножей
 		bool swapKnifes( Knight* knight ); // Пробуем поменять ножи
 		bool takeKnifes( Knight* knight ); // Пробуем взять ножи
 		bool putKnifes( Knight* knight ); // Положить ножи
@@ -80,6 +85,7 @@ class KnightWaitingState:
 		void Destroy();
 		virtual ~KnightWaitingState();
 
+		virtual bool activate( Knight* knight );
 		virtual void step( Knight* knight );
 		virtual const std::string stateName()
 		{

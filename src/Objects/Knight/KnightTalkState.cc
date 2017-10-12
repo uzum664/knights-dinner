@@ -36,7 +36,10 @@ bool KnightTalkState::activate( Knight* knight )
 	tellStory(knight);
 	
 	// выставляем время окончания рассказа
-	setStateEndTime( knight, time(NULL) + knight->getTalkTimeout() );
+	setStateEndTime( knight, time(NULL) + getTalkTimeout(knight) );
+	
+	// сбрасываем флаг, чтоб иметь возможность поменять ножи
+	resetSwappedKnifes(knight);
 	
 	ostringstream os;
 	os << knight << "::activate()" <<  endl;

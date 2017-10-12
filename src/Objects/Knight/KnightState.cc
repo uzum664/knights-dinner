@@ -104,7 +104,8 @@ bool KnightState::swapKnifes( Knight* knight )
 	ostringstream os;
 	os << *knight << " swap knifes" << endl;
 	cout << os.str();
-	knight->need_swap_knifes_ = false; 
+	knight->need_swap_knifes_ = false;
+	knight->swapped_knifes_ = true;
 	place->swapKnifes();
 	return true;
 }

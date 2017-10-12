@@ -19,6 +19,7 @@ Knight::Knight( const std::string& name ) :
 	,place_(NULL)
 	,waiting_knifes_(false)
 	,need_swap_knifes_(false)
+	,swapped_knifes_(false)
 {
 	int status = pthread_mutex_init(&mutex_, NULL);
 	if (status != 0) {
@@ -120,6 +121,11 @@ bool Knight::askSwapKnifes()
 		return false;
 	}
 	if( !place_->isKnifesDifferent() )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	if( swapped_knifes_ )
 	{
 		pthread_mutex_unlock(&mutex_);
 		return false;
