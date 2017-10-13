@@ -1,0 +1,15 @@
+<glade-catalog name="knights" library="glade-knights" supports="libglade" domain="glade-3" depends="gtk+">
+
+	<init-function>knights_init</init-function>
+
+	<glade-widget-classes>
+                <glade-widget-class name="gtkmm__CustomObject_roundtable" generic-name="roundtable" title="RoundTable" >
+			<get-type-function>uroundtable_get_type</get-type-function>
+			<post-create-function>roundtable_postcreate</post-create-function>
+                </glade-widget-class>
+	</glade-widget-classes>
+
+	<glade-widget-group name="knights" title="knights Widgets">
+		<glade-widget-class-ref name="gtkmm__CustomObject_roundtable"/>
+	</glade-widget-group>
+</glade-catalog>

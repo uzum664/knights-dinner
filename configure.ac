@@ -22,6 +22,19 @@ ASTYLE_OPT="-A1 -T -C -S -N -L -w -Y -M -f -p --mode=c --lineend=linux --align-r
 AC_SUBST(ASTYLE_OPT)
 
 # Checks for libraries.
+# check gtkmm
+PKG_CHECK_MODULES(GTKMM, gtkmm-2.4,,exit)
+AC_SUBST(GTKMM_LIBS)
+AC_SUBST(GTKMM_CFLAGS)
+
+# check libglade
+PKG_CHECK_MODULES(GLADEMM,libglademm-2.4)
+AC_SUBST(GLADEMM_LIBS)
+AC_SUBST(GLADEMM_CFLAGS)
+
+# check glade
+PKG_CHECK_MODULES(GLADE, [libglade-2.0 >= 2.6.4],, AC_MSG_ERROR([Cannot find Glade]))
+PKG_CHECK_MODULES(GLADEUI, [gladeui-1.0 >= 3.6.0],, AC_MSG_ERROR([Cannot find GladeUI]))
 
 CXXFLAGS="-I\$(top_builddir)/include -std=c++03 -pthread"
 
@@ -53,6 +66,8 @@ AC_CONFIG_FILES([Makefile
 				 src/Algorithms/HungrySimpleDinner/Makefile
 				 src/Algorithms/PriorityDinner/Makefile
 				 src/GUI/Makefile
+				 src/GUI/lib/Makefile
+				 src/GUI/widgets/Makefile
 				 lib/Various/Makefile
 				 lib/Makefile])
 
