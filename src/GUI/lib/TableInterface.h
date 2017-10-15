@@ -21,7 +21,7 @@ namespace knights
 			
 		private:
 			static TableInterface* table_interface_;
-			RoundTable* table_;
+			RoundTable* gui_table_;
 
 	};
 }

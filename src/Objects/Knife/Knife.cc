@@ -4,7 +4,8 @@
 using namespace std;
 using namespace knights;
 //---------------------------------------------------------------------------------------
-Knife::Knife()
+Knife::Knife() :
+	taken_(false)
 {
 	int status = pthread_mutex_init(&taken_mutex_, NULL);
 	if (status != 0) {

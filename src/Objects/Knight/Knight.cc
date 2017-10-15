@@ -33,12 +33,6 @@ Knight::Knight( const std::string& name ) :
 //---------------------------------------------------------------------------------------
 Knight::~Knight()
 {
-	int status = pthread_mutex_destroy(&mutex_);
-	if (status != 0) {
-		ostringstream os;
-		os << "Knife(): error: can't destroy mutex, status = " << status;
-		throw Exception( os.str() );
-	}
 	// прерываем поток
 	if( running_ )
 	{
@@ -49,6 +43,12 @@ Knight::~Knight()
 			os << "main(): error: can't cancel thread, status = " << status;
 			throw Exception( os.str() );
 		}
+	}
+	int status = pthread_mutex_destroy(&mutex_);
+	if (status != 0) {
+		ostringstream os;
+		os << "Knife(): error: can't destroy mutex, status = " << status;
+		throw Exception( os.str() );
 	}
 	if( place_ )
 	{

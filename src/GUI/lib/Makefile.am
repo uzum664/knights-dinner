@@ -2,7 +2,10 @@ noinst_LTLIBRARIES 		= libknightsGUI.la
 libknightsGUI_la_CXXFLAGS	= \
 	${GTKMM_CFLAGS} \
 	${GLADEMM_CFLAGS} \
-	-I$(top_builddir)/src/GUI/widgets
+	-I$(top_builddir)/src/GUI/widgets \
+	-I$(top_builddir)/src/Algorithms/Dinner \
+	-I$(top_builddir)/src/Algorithms \
+	-I$(top_builddir)/src/Objects
 libknightsGUI_la_LIBADD	= \
 	${GTKMM_LIBS} \
 	${GLADEMM_LIBS} \

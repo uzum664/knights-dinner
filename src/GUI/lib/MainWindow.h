@@ -2,6 +2,7 @@
 #define _MainWindow_H_
 // ------------------------------------------------------------------------------
 #include <gtkmm.h>
+#include "Dinner/Dinner.h"
 // ------------------------------------------------------------------------------
 namespace knights
 {
@@ -27,6 +28,7 @@ namespace knights
 			Gtk::Window splash;
 			Gtk::Alignment alignment;
 			Gtk::ProgressBar bar;
+			Dinner* dinner;
 	};
 }
 // ------------------------------------------------------------------------------

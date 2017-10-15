@@ -11,6 +11,7 @@ namespace knights
 
 class Knife;
 class Place;
+class TableInterface;
 
 /*!
 	Класс Стол - описывает структуру круглого стола,
@@ -40,6 +41,7 @@ class Table
 		friend std::ostream& operator<<( std::ostream& os, Table* table );
 		
 	private:
+		friend TableInterface;
 		static Table* inst;
 		typedef std::list<Place*> Places;
 		Places places_; // места за столом

@@ -5,6 +5,7 @@
 #include "TableInterface.h"
 #include "JournalInterface.h"
 #include "StatisticInterface.h"
+#include "PriorityDinner/PriorityDinner.h"
 // ------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -30,8 +31,15 @@ MainWindow::MainWindow (string gladedir, string guifile, string svgdir) :
 	assert( w != 0 );
 	w->signal_show().connect( sigc::mem_fun(*this, &MainWindow::on_show) );
 
+	dinner = new PriorityDinner();
+	dinner->addHungryKnight("   Артур");
+	dinner->addHungryKnight("  Ричард");
+	dinner->addHungryKnight("Ланселот");
+	dinner->addHungryKnight("   Робин");
+	dinner->addHungryKnight("  Гивеон");
+	
 	// инициализируем обмен данных для RoundTable
-	TableInterface::Instance(gxml);
+	TableInterface::Instance( gxml );
 	// инициализируем обмен данных для Журнала
 	JournalInterface::Instance(gxml);
 	// инициализируем обмен данных для Статистики
@@ -66,5 +74,6 @@ void MainWindow::on_show()
 {
 	cout << "MainWindow::on_show()" << endl;
 	splash.hide();
+	dinner->start();
 }
 //---------------------------------------------------------------------------------------
