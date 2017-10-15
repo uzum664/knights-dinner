@@ -41,11 +41,11 @@ RoundTable::RoundTable( Gtk::Fixed::BaseObjectType* gobject ) :
 RoundTable::~RoundTable()
 {
 	for( Images::iterator it = knight_images_.begin(); it != knight_images_.end(); ++it )
-		if( it->second )
-			delete it->second;
+		if( it->second.image )
+			delete it->second.image;
 	for( Images::iterator it = knife_images_.begin(); it != knife_images_.end(); ++it )
-		if( it->second )
-			delete it->second;
+		if( it->second.image )
+			delete it->second.image;
 }
 // -------------------------------------------------------------------------
 void RoundTable::on_place_number_changed()
@@ -56,23 +56,23 @@ void RoundTable::on_place_number_changed()
 	
 	int size = knight_images_.size();
 	for( Images::iterator it = knight_images_.begin(); it != knight_images_.end(); ++it )
-		if( it->second )
-			delete it->second;
+		if( it->second.image )
+			delete it->second.image;
 	for( Images::iterator it = knife_images_.begin(); it != knife_images_.end(); ++it )
-		if( it->second )
-			delete it->second;
+		if( it->second.image )
+			delete it->second.image;
 	knight_images_.clear();
 	knife_images_.clear();
 	for( int i = 0; i < get_place_number(); ++i )
 	{
-		knight_images_[i] = new Gtk::Image( get_knight_wait_image_path() );
-		knife_images_[i] = new Gtk::Image( get_food_knife_image_path() );
-		put(*knight_images_[i], 0, 0);
-		put(*knife_images_[i], 0, 0);
+		knight_images_[i].image = new Gtk::Image( get_knight_wait_image_path() );
+		knife_images_[i].image = new Gtk::Image( get_food_knife_image_path() );
+		put(*knight_images_[i].image, 0, 0);
+		put(*knife_images_[i].image, 0, 0);
 		moveKnight( i, i );
 		moveKnife( i, i );
-		knight_images_[i]->show();
-		knife_images_[i]->show();
+		knight_images_[i].image->show();
+		knife_images_[i].image->show();
 	}
 }
 // -------------------------------------------------------------------------
@@ -109,13 +109,13 @@ bool RoundTable::setKnight( const unsigned int& number, const ImageType& type )
 	switch( type )
 	{
 		case KNIGHT_WAIT:
-			knight_images_[number]->set( get_knight_wait_image_path() );
+			knight_images_[number].image->set( get_knight_wait_image_path() );
 			break;
 		case KNIGHT_EAT:
-			knight_images_[number]->set( get_knight_eat_image_path() );
+			knight_images_[number].image->set( get_knight_eat_image_path() );
 			break;
 		case KNIGHT_TALK:
-			knight_images_[number]->set( get_knight_talk_image_path() );
+			knight_images_[number].image->set( get_knight_talk_image_path() );
 			break;
 		default:
 			return false;
@@ -131,10 +131,10 @@ bool RoundTable::setKnife( const unsigned int& number, const ImageType& type )
 	switch( type )
 	{
 		case FOOD_KNIFE:
-			knife_images_[number]->set( get_food_knife_image_path() );
+			knife_images_[number].image->set( get_food_knife_image_path() );
 			break;
 		case CUTTER_KNIFE:
-			knife_images_[number]->set( get_cutter_knife_image_path() );
+			knife_images_[number].image->set( get_cutter_knife_image_path() );
 			break;
 		default:
 			return false;
@@ -144,21 +144,47 @@ bool RoundTable::setKnife( const unsigned int& number, const ImageType& type )
 // -------------------------------------------------------------------------
 void RoundTable::moveKnight( const unsigned int& number, const double& pos )
 {
-	int x,y;
-	getPosition( x, y, angle_step_ * 4 * pos );
-	move( *knight_images_[number], x, y );
+	getPosition( knight_images_[number].x, knight_images_[number].y, angle_step_ * 4 * pos );
+	move( *knight_images_[number].image, knight_images_[number].x, knight_images_[number].y );
 }
 // -------------------------------------------------------------------------
 void RoundTable::moveKnife( const unsigned int& number, const double& pos )
 {
-	int x,y;
-	getPosition( x, y, angle_step_ * 4 * pos - angle_step_ * 2 );
-	move( *knife_images_[number], x, y );
+	getPosition( knight_images_[number].x, knight_images_[number].y, angle_step_ * 4 * pos - angle_step_ * 2 );
+	move( *knife_images_[number].image, knight_images_[number].x, knight_images_[number].y );
 }
 // -------------------------------------------------------------------------
 void RoundTable::getPosition( int& x, int& y, const double& angle )
 {
 	x = table_radius_ + table_radius_ * cos(angle + M_PI / 2);
 	y = table_radius_ - table_radius_ * sin(angle + M_PI / 2);
+}
+// -------------------------------------------------------------------------
+void RoundTable::swapKnifes( const unsigned int& number1, const unsigned int& number2 )
+{
+	
+	Gtk::Image* image1 = knight_images_[number1].image;
+	Gtk::Image* image2 = knight_images_[number2].image;
+	knight_images_[number1].image = image2;
+	knight_images_[number2].image = image1;
+	moveKnife(number1, number2);
+	moveKnife(number1, number2);
+	// так как свап возможен при взятии делаем attachKnife
+	//attachKnife
+}
+// -------------------------------------------------------------------------
+void RoundTable::attachKnife( const unsigned int& knife_number, const unsigned int& knight_number )
+{  
+	double knife_angle = angle_step_ * 4 * knife_number  - angle_step_ * 2;
+	double knight_angle = angle_step_ * 4 * knight_number;
+	
+	if( knight_angle > knife_angle )
+		knife_angle += angle_step_;
+	else
+		knife_angle -= angle_step_;
+	
+	int x,y;
+	getPosition( x, y, knife_angle );
+	move( *knife_images_[knife_number].image, x, y );
 }
 // -------------------------------------------------------------------------

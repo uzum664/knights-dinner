@@ -24,6 +24,8 @@ namespace knights
 			};
 			bool setKnight( const unsigned int& number, const ImageType& type );
 			bool setKnife( const unsigned int& number, const ImageType& type );
+			void swapKnifes( const unsigned int& number1, const unsigned int& number2 );
+			void attachKnife( const unsigned int& knife_number, const unsigned int& knight_number );
 			
 		protected:
 			void moveKnight( const unsigned int& number, const double& pos );
@@ -44,7 +46,13 @@ namespace knights
 			ADD_PROPERTY( food_knife_image_path, Glib::RefPtr<Gdk::Pixbuf> )
 			ADD_PROPERTY( cutter_knife_image_path, Glib::RefPtr<Gdk::Pixbuf> )
 			
-			typedef std::map<unsigned int, Gtk::Image*> Images;
+			struct ImageState
+			{
+				Gtk::Image* image;
+				int x;
+				int y;
+			};
+			typedef std::map<unsigned int, ImageState> Images;
 			Images knight_images_;
 			Images knife_images_;
 			unsigned int table_radius_;
