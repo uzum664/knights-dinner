@@ -7,11 +7,13 @@ libknightswidgets_la_SOURCES = \
 	RoundTable.cc
 
 libknightswidgets_la_LIBADD = \
+	${RSVG_LIBS} \
 	${GTKMM_LIBS} \
 	${GLADE_LIBS} \
 	$(top_builddir)/lib/lib@PACKAGE@.la
 
 libknightswidgets_la_CXXFLAGS = \
+	${RSVG_CFLAGS} \
 	${GTKMM_CFLAGS} \
 	${GLADE_CFLAGS}
 

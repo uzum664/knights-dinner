@@ -38,5 +38,5 @@ template <class UType> static GtkWidget* glade_new(GladeXML* xml, GType widget_t
 
 extern "C" void glade_module_register_widgets()
 {
-	glade_register_widget(Obj_Get_Type<RoundTable>(), glade_new<RoundTable>, NULL, NULL);
+	glade_register_widget(Obj_Get_Type<RoundTable>(), glade_new<RoundTable>, glade_standard_build_children, NULL);
 }

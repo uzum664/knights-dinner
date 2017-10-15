@@ -36,6 +36,9 @@ AC_SUBST(GLADEMM_CFLAGS)
 PKG_CHECK_MODULES(GLADE, [libglade-2.0 >= 2.6.4],, AC_MSG_ERROR([Cannot find Glade]))
 PKG_CHECK_MODULES(GLADEUI, [gladeui-1.0 >= 3.6.0],, AC_MSG_ERROR([Cannot find GladeUI]))
 
+# check svg
+PKG_CHECK_MODULES(RSVG, [librsvg-2.0 >= 2.26],, AC_MSG_ERROR([Cannot find RSVG]))
+
 CXXFLAGS="-I\$(top_builddir)/include -std=c++03 -pthread"
 
 AC_SUBST(LDFLAGS)
