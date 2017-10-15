@@ -18,6 +18,7 @@ int main(int argc, char **argv)
 		dinner.addHungryKnight("   Робин");
 		dinner.addHungryKnight("  Гивеон");
 		dinner.start();
+		dinner.waitThread();
 	}
 	catch(std::exception& ex)
 	{
