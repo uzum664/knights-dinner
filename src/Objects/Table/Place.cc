@@ -7,7 +7,7 @@ using namespace knights;
 //---------------------------------------------------------------------------------------
 Place::Place( Table* table ) :
 	table_(table)
-	,busy_(false)
+	,owner_(NULL)
 	,num_(0)
 {
 }
@@ -21,19 +21,19 @@ Place::~Place()
 {
 }
 //---------------------------------------------------------------------------------------
-bool Place::take()
+bool Place::take( const Owner& owner )
 {
-	if( busy_ )
+	if( owner_ )
 		return false;
-	busy_ = true;
+	owner_ = owner;
 	return true;
 }
 //---------------------------------------------------------------------------------------
 bool Place::free()
 {
-	if( !busy_ )
+	if( !owner_ )
 		return false;
-	busy_ = false;
+	owner_ = NULL;
 	return true;
 }
 //---------------------------------------------------------------------------------------

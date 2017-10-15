@@ -15,11 +15,12 @@ int main(int argc, char **argv)
 	{
 		Table* table = Table::Instance(PLACE_NUM);
 		Place* places[PLACE_NUM + 1];
+		Place::Owner owner;
 		for( int i = 0; i < (PLACE_NUM + 1); ++i )
 		{
 			places[i] = table->findFreePlace();
 			if( places[i] )
-				places[i]->take();
+				places[i]->take(owner);
 		}
 		for( int i = 0; i < PLACE_NUM; ++i )
 		{

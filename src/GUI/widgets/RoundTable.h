@@ -15,21 +15,23 @@ namespace knights
 			explicit RoundTable(Gtk::Fixed::BaseObjectType* gobject);
 			virtual ~RoundTable();
 			
-			enum ImageType{
+			typedef unsigned int ImageKey;
+			typedef unsigned int ImagePosition;
+			enum ImageType
+			{
 				KNIGHT_WAIT,
 				KNIGHT_EAT,
 				KNIGHT_TALK,
 				FOOD_KNIFE,
 				CUTTER_KNIFE
 			};
-			bool setKnight( const unsigned int& number, const ImageType& type );
-			bool setKnife( const unsigned int& number, const ImageType& type );
-			void swapKnifes( const unsigned int& number1, const unsigned int& number2 );
-			void attachKnife( const unsigned int& knife_number, const unsigned int& knight_number );
+			bool setKnight( const ImageKey& number, const ImageType& type );
+			bool setKnife( const ImageKey& number, const ImageType& type );
+			void moveKnife( const ImageKey& number, const ImagePosition& pos );
+			void attachKnife( const ImageKey& knife_number, const ImageKey& knight_number );
 			
 		protected:
-			void moveKnight( const unsigned int& number, const double& pos );
-			void moveKnife( const unsigned int& number, const double& pos );
+			void moveKnight( const ImageKey& number, const ImagePosition& pos );
 			void getPosition( int& x, int& y, const double& angle );
 			virtual void on_size_allocate(Gtk::Allocation& alloc);
 			virtual void on_realize();
@@ -51,8 +53,9 @@ namespace knights
 				Gtk::Image* image;
 				int x;
 				int y;
+				ImagePosition pos;
 			};
-			typedef std::map<unsigned int, ImageState> Images;
+			typedef std::map<ImageKey, ImageState> Images;
 			Images knight_images_;
 			Images knife_images_;
 			unsigned int table_radius_;

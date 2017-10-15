@@ -9,6 +9,7 @@ libknightsGUI_la_CXXFLAGS	= \
 libknightsGUI_la_LIBADD	= \
 	${GTKMM_LIBS} \
 	${GLADEMM_LIBS} \
+	$(top_builddir)/src/Objects/libObjects.la \
 	$(top_builddir)/lib/lib@PACKAGE@.la
 
 libknightsGUI_la_SOURCES	= \

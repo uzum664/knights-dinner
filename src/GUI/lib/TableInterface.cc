@@ -1,7 +1,4 @@
 #include "TableInterface.h"
-#include "Knight/Knight.h"
-#include "Knife/Knife.h"
-#include "Table/Table.h"
 #include "Table/Place.h"
 #include <iostream>
 // -------------------------------------------------------------------------
@@ -22,8 +19,18 @@ TableInterface::TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml 
 	if( !gui_table_ )
 	{
 		cerr << "TableInterface(): No 'roundtable1' in glade!" << endl;
-	//	throw;
+		throw;
 	}
+	
+	Table* table = Table::Instance();
+	if( !table )
+	{
+		cerr << "TableInterface(): No table ???" << endl;
+		throw;
+	}
+	
+	gui_table_->signal_realize().connect( sigc::mem_fun( this, &TableInterface::init) );
+	
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &TableInterface::poll ), getPollTimeout() );
 }
 // -------------------------------------------------------------------------
@@ -38,34 +45,92 @@ TableInterface*  TableInterface::Instance( const Glib::RefPtr<Gnome::Glade::Xml>
 	return table_interface_;
 }
 // -------------------------------------------------------------------------
+void TableInterface::init()
+{
+	Table* table = Table::Instance();
+	if( !table )
+		return;
+	{
+		RoundTable::ImageKey i = 0;
+		for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
+		{
+			if( dynamic_cast<FoodKnife*>(*it) )
+			{
+				gui_table_->setKnife(i, RoundTable::FOOD_KNIFE);
+				ostringstream os;
+				os << "TableInterface" << "() нож " << i << " для еды" <<  endl;
+				cout << os.str();
+			}
+			else if( dynamic_cast<CutterKnife*>(*it) )
+			{
+				gui_table_->setKnife(i, RoundTable::CUTTER_KNIFE);
+				ostringstream os;
+				os << "TableInterface" << "() нож " << i << " для нарезки" <<  endl;
+				cout << os.str();
+			}
+			knife_keys_[*it] = i;
+		}
+	}
+}
+// -------------------------------------------------------------------------
 bool TableInterface::poll()
 {
 	Table* table = Table::Instance();
 	if( !table )
 		return true;
-	int i = 0;
-	for( Table::Places::iterator it = table->places_.begin() ; it != table->places_.end(); ++it, ++i )
+	
+	// Проверяем и перемещаем ножи
 	{
-		if( !*it )
-			continue;
-		if( (*it)->isLeftKnifeTaken() )
+		RoundTable::ImagePosition i = 0;
+		for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
 		{
-			ostringstream os;
-			os << "TableInterface" << "::poll() нож " << (i-1) << " занят" <<  endl;
-			cout << os.str();
-		}
-		if( (*it)->isRightKnifeTaken() )
-		{
-			ostringstream os;
-			os << "TableInterface" << "::poll() нож " << i << " занят" <<  endl;
-			cout << os.str();
+			if( !*it )
+				continue;
+			
+			gui_table_->moveKnife( knife_keys_[*it], i );
 		}
 	}
-	i = 0;
-	for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
+	// Проверяем и выводим состояние рыцаря
 	{
-		if( !*it )
-			continue;
+		RoundTable::ImageKey i = 0;
+		for( Table::Places::iterator it = table->places_.begin() ; it != table->places_.end(); ++it, ++i )
+		{
+			if( !*it )
+				continue;
+			// проверяем занято ли место рыцарем
+			Knight* knight = reinterpret_cast<Knight*>((*it)->getOwner());
+			if( !knight )
+				continue;
+			
+			switch( knight->getState() )
+			{
+				case Knight::WAITING:
+					gui_table_->setKnight(i, RoundTable::KNIGHT_WAIT);
+					break;
+				case Knight::EAT:
+					gui_table_->setKnight(i, RoundTable::KNIGHT_EAT);
+					break;
+				case Knight::TALK:
+					gui_table_->setKnight(i, RoundTable::KNIGHT_TALK);
+					break;
+			}
+			
+			// если ножи взяты в руки, двигаем поближе
+			if( knight->hasLeftKnife() )
+			{
+				gui_table_->attachKnife( knife_keys_[*(*it)->getLeftKnife()], i);
+				ostringstream os;
+				os << "TableInterface" << "::poll() нож " << knife_keys_[*(*it)->getLeftKnife()] << " на месте" << i << " занят" <<  endl;
+				//cout << os.str();
+			}
+			if( knight->hasRightKnife() )
+			{
+				gui_table_->attachKnife( knife_keys_[*(*it)->getRightKnife()], i);
+				ostringstream os;
+				os << "TableInterface" << "::poll() нож " << knife_keys_[*(*it)->getRightKnife()] <<  " на месте" << (i + 1) << " занят" <<  endl;
+				//cout << os.str();
+			}
+		}
 	}
 	
 	// не заканчиваем цикл вызова

@@ -102,6 +102,22 @@ void Knight::thread()
 	}
 }
 //---------------------------------------------------------------------------------------
+Knight::State Knight::getState()
+{
+	State result = WAITING;
+	pthread_mutex_lock(&mutex_);
+	if( dynamic_cast<KnightWaitingState*>(state_) )
+		result = WAITING;
+	else if( dynamic_cast<KnightEatState*>(state_) )
+		result = EAT;
+	else if( dynamic_cast<KnightTalkState*>(state_) )
+		result = TALK;
+	else if( dynamic_cast<KnightTransientState*>(state_) )
+		result = TRANSIENT;
+	pthread_mutex_unlock(&mutex_);
+	return result;
+}
+//---------------------------------------------------------------------------------------
 std::string Knight::textStatistic()
 {
 	ostringstream os;
@@ -110,6 +126,24 @@ std::string Knight::textStatistic()
 	os << "\tleft=" << has_left_knife_ << "\t right=" << has_right_knife_ << "\twaiting=" << waiting_knifes_ << "\tneed_swap=" << need_swap_knifes_;
 	pthread_mutex_unlock(&mutex_);
 	return os.str();
+}
+//---------------------------------------------------------------------------------------
+bool Knight::hasLeftKnife()
+{
+	bool has;
+	pthread_mutex_lock(&mutex_);
+	has = has_left_knife_;
+	pthread_mutex_unlock(&mutex_);
+	return has;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::hasRightKnife()
+{
+	bool has;
+	pthread_mutex_lock(&mutex_);
+	has = has_right_knife_;
+	pthread_mutex_unlock(&mutex_);
+	return has;
 }
 //---------------------------------------------------------------------------------------
 bool Knight::askSwapKnifes()
@@ -214,7 +248,7 @@ bool Knight::putOn( Place* place )
 		place_->free();
 	place_ = NULL;
 	// пробуем занять место
-	if( place && place->take() )
+	if( place && place->take(reinterpret_cast<Place::Owner>(this)) )
 	{
 		place_ = place;
 		pthread_mutex_unlock(&mutex_);

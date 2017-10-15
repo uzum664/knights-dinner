@@ -33,11 +33,21 @@ class Knight
 		
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
 		
+		enum State
+		{
+			WAITING,
+			EAT,
+			TALK,
+			TRANSIENT
+		};
+		State getState(); // Состояние рыцаря
 		std::string textStatistic(); // Статистика рыцаря
 		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
 		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
 		bool hasDifferentKnifes(); // У рыцаря есть подходящие ножи
 		bool hasPermision(); // есть разрешение
+		bool hasLeftKnife(); // Рыцарь взял левый нож
+		bool hasRightKnife(); // Рыцарь взял правый нож
 		int getHunger(); // Уровень голода рыцаря
 		bool isHungry(); // рыцарь голоден
 		bool toldStory(); // рыцарь рассказал хотя бы 1 историю

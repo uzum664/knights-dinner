@@ -3,6 +3,8 @@
 
 #include <libglademm.h>
 #include "RoundTable.h"
+#include "Knife/Knife.h"
+#include "Knight/Knight.h"
 
 namespace knights
 {
@@ -13,6 +15,7 @@ namespace knights
 			virtual ~TableInterface();
 			
 			int getPollTimeout() { return 200; } // период цикла обработки данных, мс
+			void init();
 			
 		protected:
 			TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml );
@@ -22,7 +25,9 @@ namespace knights
 		private:
 			static TableInterface* table_interface_;
 			RoundTable* gui_table_;
-
+			std::map<Knife*, RoundTable::ImageKey> knife_keys_; // массив для определения какой виджет соответствует ножу
+			// так как рыцари места не меняют им массив соответствий не нужен
+			//std::map<Knight*, RoundTable::ImageKey> knights_keys_; // массив для определения какой виджет соответствует рыцарю
 	};
 }
 

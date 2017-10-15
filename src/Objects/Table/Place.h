@@ -19,8 +19,10 @@ class Place
 {
 	public:
 		virtual ~Place();
-		bool isBusy() const { return busy_; };
-		bool take(); // занять место
+		typedef int Owner;
+		Owner getOwner() const { return owner_; }; // Получить владельца
+		bool isBusy() const { return owner_ != NULL; };
+		bool take( const Owner& owner ); // занять место
 		bool free(); // освободить место
 		bool swapKnifes(); // поменять ножи местами на конкретном месте
 		bool isKnifesDifferent() const; // проверить что ножи разные
@@ -44,7 +46,7 @@ class Place
 		Table* table_; // Стол которому принадлежит место
 		Table::Knifes::iterator right_knife_; // Нож cправа
 		Table::Knifes::iterator left_knife_; // Нож слева
-		bool busy_; // место занято
+		Owner owner_; // Хозяин места (место занято если не NULL)
 		int num_; // номер места
 };
 
