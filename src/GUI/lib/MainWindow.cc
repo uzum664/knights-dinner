@@ -1,7 +1,10 @@
-#include "MainWindow.h"
 #include <libglademm.h>
 #include <assert.h>
 #include <iostream>
+#include "MainWindow.h"
+#include "TableInterface.h"
+#include "JournalInterface.h"
+#include "StatisticInterface.h"
 // ------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -27,6 +30,13 @@ MainWindow::MainWindow (string gladedir, string guifile, string svgdir) :
 	assert( w != 0 );
 	w->signal_show().connect( sigc::mem_fun(*this, &MainWindow::on_show) );
 
+	// инициализируем обмен данных для RoundTable
+	TableInterface::Instance(gxml);
+	// инициализируем обмен данных для Журнала
+	JournalInterface::Instance(gxml);
+	// инициализируем обмен данных для Статистики
+	StatisticInterface::Instance(gxml);
+	
 	draw_splash(1);
 }
 //---------------------------------------------------------------------------------------
