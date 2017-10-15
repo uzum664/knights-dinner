@@ -69,8 +69,8 @@ void RoundTable::on_place_number_changed()
 		knife_images_[i].image = new Gtk::Image( get_food_knife_image_path() );
 		put(*knight_images_[i].image, 0, 0);
 		put(*knife_images_[i].image, 0, 0);
-		moveKnight( i, i );
-		moveKnife( i, i );
+		putKnight( i, i );
+		putKnife( i, i );
 		knight_images_[i].image->show();
 		knife_images_[i].image->show();
 	}
@@ -97,8 +97,8 @@ void RoundTable::on_realize()
 	{
 		setKnight( i, KNIGHT_WAIT );
 		setKnife( i, FOOD_KNIFE );
-		moveKnight( i, i );
-		moveKnife( i, i );
+		putKnight( i, i );
+		putKnife( i, i );
 	}
 }
 // -------------------------------------------------------------------------
@@ -141,19 +141,31 @@ bool RoundTable::setKnife( const ImageKey& number, const ImageType& type )
 	return true;
 }
 // -------------------------------------------------------------------------
-void RoundTable::moveKnight( const ImageKey& number, const ImagePosition& pos )
+void RoundTable::putKnight( const ImageKey& number, const ImagePosition& pos )
 {
 	getPosition( knight_images_[number].x, knight_images_[number].y, angle_step_ * 4 * pos );
 	move( *knight_images_[number].image, knight_images_[number].x, knight_images_[number].y );
 }
 // -------------------------------------------------------------------------
+void RoundTable::putKnife( const ImageKey& number, const ImagePosition& pos )
+{
+	getPosition( knife_images_[number].x, knife_images_[number].y, angle_step_ * 4 * pos - angle_step_ * 2  );
+	move( *knife_images_[number].image, knife_images_[number].x, knife_images_[number].y );
+	//knife_images_[number].x = knife_images_[number].x;
+	//knife_images_[number].y = knife_images_[number].y;
+	knife_images_[number].curx = knife_images_[number].x;
+	knife_images_[number].cury = knife_images_[number].y;
+}
+// -------------------------------------------------------------------------
 void RoundTable::moveKnife( const ImageKey& number, const ImagePosition& pos )
 {
-	getPosition( knight_images_[number].x, knight_images_[number].y, angle_step_ * 4 * pos - angle_step_ * 2 );
-	move( *knife_images_[number].image, knight_images_[number].x, knight_images_[number].y );
-	
 	if( knife_images_[number].pos != pos )
 	{
+		getPosition( knife_images_[number].x, knife_images_[number].y, angle_step_ * 4 * pos - angle_step_ * 2 );
+		knife_images_[number].step = 0;
+		knife_images_[number].stepx = ( knife_images_[number].x - knife_images_[number].curx ) / getMoveSteps();
+		knife_images_[number].stepy = ( knife_images_[number].y - knife_images_[number].cury ) / getMoveSteps();
+		knife_images_[number].conn = Glib::signal_timeout().connect( sigc::bind( sigc::mem_fun( this, &RoundTable::kineticMove ), knife_images_[number] ), getMoveTimeout() );
 		ostringstream os;
 		os << "RoundTable" << "::moveKnife() нож " << number << " передали на место " << pos <<  endl;
 		cout << os.str();
@@ -182,6 +194,33 @@ void RoundTable::attachKnife( const ImageKey& knife_number, const ImageKey& knig
 	
 	int x,y;
 	getPosition( x, y, knife_angle );
-	move( *knife_images_[knife_number].image, x, y );
+	//move( *knife_images_[knife_number].image, x, y );
+	knife_images_[knife_number].step = 0;
+	knife_images_[knife_number].stepx = ( x - knife_images_[knife_number].curx ) / getMoveSteps();
+	knife_images_[knife_number].stepy = ( y - knife_images_[knife_number].cury ) / getMoveSteps();
+	knife_images_[knife_number].conn = Glib::signal_timeout().connect( sigc::bind( sigc::mem_fun( this, &RoundTable::kineticMove ), knife_images_[knife_number] ), getMoveTimeout() );
+}
+// -------------------------------------------------------------------------
+bool RoundTable::kineticMove( ImageState& knife )
+{
+		/*ostringstream os;
+		os << "RoundTable" << "::kineticMove() нож " << knife.pos << " шаг " << knife.step <<  endl;
+		cout << os.str();*/
+	if ( ++knife.step >= getMoveSteps() )
+	{
+		ostringstream os;
+		os << "RoundTable" << "::kineticMove() нож " << knife.pos << " закончил" <<  endl;
+		cout << os.str();
+		knife.curx = knife.x;
+		knife.cury = knife.y;
+		move( *knife.image, knife.curx, knife.cury );
+		//knife.conn.disconnect();
+		return false;
+	}
+	knife.curx += knife.stepx;
+	knife.cury += knife.stepy;
+	move( *knife.image, knife.curx, knife.cury );
+	Glib::signal_timeout().connect( sigc::bind( sigc::mem_fun( this, &RoundTable::kineticMove ), knife ), getMoveTimeout() );
+	return false;
 }
 // -------------------------------------------------------------------------

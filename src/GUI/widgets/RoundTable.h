@@ -15,6 +15,9 @@ namespace knights
 			explicit RoundTable(Gtk::Fixed::BaseObjectType* gobject);
 			virtual ~RoundTable();
 			
+			int getMoveTimeout() { return 200; } // время на перемещение виджетов, 1 итерация, мс
+			int getMoveSteps() { return 5; } // кол-во итераций перемещения виджетов за 1 дейтсвие
+			
 			typedef unsigned int ImageKey;
 			typedef unsigned int ImagePosition;
 			enum ImageType
@@ -31,8 +34,25 @@ namespace knights
 			void attachKnife( const ImageKey& knife_number, const ImageKey& knight_number );
 			
 		protected:
-			void moveKnight( const ImageKey& number, const ImagePosition& pos );
+			void putKnight( const ImageKey& number, const ImagePosition& pos );
+			void putKnife( const ImageKey& number, const ImagePosition& pos );
 			void getPosition( int& x, int& y, const double& angle );
+			
+			struct ImageState
+			{
+				Gtk::Image* image;
+				int x;
+				int y;
+				int curx;
+				int cury;
+				int step;
+				int stepx;
+				int stepy;
+				sigc::connection conn;
+				ImagePosition pos;
+			};
+			
+			bool kineticMove( ImageState& knife );
 			virtual void on_size_allocate(Gtk::Allocation& alloc);
 			virtual void on_realize();
 
@@ -48,18 +68,12 @@ namespace knights
 			ADD_PROPERTY( food_knife_image_path, Glib::RefPtr<Gdk::Pixbuf> )
 			ADD_PROPERTY( cutter_knife_image_path, Glib::RefPtr<Gdk::Pixbuf> )
 			
-			struct ImageState
-			{
-				Gtk::Image* image;
-				int x;
-				int y;
-				ImagePosition pos;
-			};
 			typedef std::map<ImageKey, ImageState> Images;
 			Images knight_images_;
 			Images knife_images_;
 			unsigned int table_radius_;
 			double angle_step_;
+			int timeout;
 
 			DISALLOW_COPY_AND_ASSIGN(RoundTable);
 	};
