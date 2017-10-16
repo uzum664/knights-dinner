@@ -11,6 +11,7 @@ using namespace knights;
 void Journal::constructor()
 {
 	cout << "Journal::constructor()" << endl;
+	columns_ = &journal_columns_;
 }
 // -------------------------------------------------------------------------
 Journal::Journal() :

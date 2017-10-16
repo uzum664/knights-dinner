@@ -31,6 +31,9 @@ namespace knights
 			explicit TreeView(Gtk::ScrolledWindow::BaseObjectType* gobject);
 			virtual ~TreeView();
 			
+			template<class ColumnsPack> void updateRow( const unsigned int& number, const ColumnsPack& data ) {} // обновить запись
+			unsigned int addRow(); // добавить запись
+			
 		protected:
 			virtual void on_realize();
 			virtual void init_treeview(); // инициализация treeview, вызывается в on_realize()
@@ -45,13 +48,13 @@ namespace knights
 			ColumnPosMap columns_map;
 			Glib::RefPtr<Gtk::ListStore> tree_model_ref_;	// модель списка для использования с виджетом Gtk::TreeView
 			Gtk::TreeView tree_view_;			// виджет отображающий модель (Gtk::TreeModel) данных и позволяющий пользователю взаимодействовать с ними
+			Gtk::TreeModel::ColumnRecord* columns_;		// указатель на описание строки в журнале
 			ColumnRecord tree_model_columns_;		// описание строки в журнале
 
 		private:
-			
 			void constructor();
-
-			Gtk::TreeModel::ColumnRecord* columns_;				// указатель на описание строки в журнале
+			
+			unsigned int row_number_;
 			
 			DISALLOW_COPY_AND_ASSIGN(TreeView);
 	};

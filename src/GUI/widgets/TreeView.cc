@@ -9,7 +9,8 @@ using namespace std;
 using namespace knights;
 // -------------------------------------------------------------------------
 #define INIT_ROUNDTABLE_PROPERTIES() \
-	tree_model_ref_(Glib::RefPtr<Gtk::ListStore>())
+	tree_model_ref_(Glib::RefPtr<Gtk::ListStore>()) \
+	,row_number_(0)
 // -------------------------------------------------------------------------
 void TreeView::constructor()
 {
@@ -38,6 +39,21 @@ TreeView::TreeView( Gtk::ScrolledWindow::BaseObjectType* gobject ) :
 TreeView::~TreeView()
 {
 }
+//-----------------------------------------------------------------------------------------------------
+void TreeView::on_realize()
+{
+	init_treeview();
+	Gtk::ScrolledWindow::on_realize();
+}
+//-----------------------------------------------------------------------------------------------------
+Gtk::TreeViewColumn* TreeView::add_column(const std::string& name, Gtk::CellRenderer* renderer)
+{
+	tree_view_.append_column(name, *renderer);
+	int pos = columns_map.size();
+	columns_map[name].column = tree_view_.get_column(pos);
+	columns_map[name].pos = pos;
+	return columns_map[name].column;
+}
 // -------------------------------------------------------------------------
 void TreeView::init_treeview()
 {
@@ -57,19 +73,13 @@ void TreeView::init_treeview()
 		pRenderer->property_xalign() = 0.5;
 	}
 }
-//-----------------------------------------------------------------------------------------------------
-Gtk::TreeViewColumn* TreeView::add_column(const std::string& name, Gtk::CellRenderer* renderer)
+// -------------------------------------------------------------------------
+unsigned int TreeView::addRow()
 {
-	tree_view_.append_column(name, *renderer);
-	int pos = columns_map.size();
-	columns_map[name].column = tree_view_.get_column(pos);
-	columns_map[name].pos = pos;
-	return columns_map[name].column;
-}
-//-----------------------------------------------------------------------------------------------------
-void TreeView::on_realize()
-{
-	init_treeview();
-	Gtk::ScrolledWindow::on_realize();
+	Gtk::TreeIter iter = tree_model_ref_->append();
+	Gtk::TreeRow row = *iter;
+	row[COLUMN(number)] = ++row_number_;
+	row[COLUMN(time)] = time(NULL);
+	return row_number_;
 }
 // -------------------------------------------------------------------------

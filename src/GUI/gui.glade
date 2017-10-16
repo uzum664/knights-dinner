@@ -49,6 +49,8 @@
             <property name="can_focus">True</property>
             <property name="hscrollbar_policy">automatic</property>
             <property name="vscrollbar_policy">automatic</property>
+            <property name="food_knife_image_path">./svg/food_knife.svg</property>
+            <property name="cutter_knife_image_path">./svg/cutter_knife.svg</property>
           </widget>
           <packing>
             <property name="x">500</property>

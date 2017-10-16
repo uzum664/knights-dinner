@@ -10,6 +10,7 @@ namespace knights
 
 class Place;
 class KnightState;
+class StatisticInterface;
 void* knight_thread( void* param );
 
 /*!
@@ -68,6 +69,7 @@ class Knight
 		friend std::ostream& operator<<(std::ostream& os, Knight& knight );
 		friend std::ostream& operator<<(std::ostream& os, Knight* knight );
 		friend class KnightState;
+		friend class StatisticInterface;
 		
 		int hunger_; // голод рыцаря
 		
