@@ -4,6 +4,8 @@
 #include <glibmm.h>
 #include <plugins.h>
 #include "RoundTable.h"
+#include "Statistic.h"
+#include "Journal.h"
 
 using namespace knights;
 
@@ -38,5 +40,7 @@ template <class UType> static GtkWidget* glade_new(GladeXML* xml, GType widget_t
 
 extern "C" void glade_module_register_widgets()
 {
-	glade_register_widget(Obj_Get_Type<RoundTable>(), glade_new<RoundTable>, glade_standard_build_children, NULL);
+	glade_register_widget(Obj_Get_Type<RoundTable>(), glade_new<RoundTable>, NULL, NULL);
+	glade_register_widget(Obj_Get_Type<Statistic>(), glade_new<Statistic>, NULL, NULL);
+	glade_register_widget(Obj_Get_Type<Journal>(), glade_new<Journal>, NULL, NULL);
 }

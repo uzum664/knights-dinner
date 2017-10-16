@@ -4,7 +4,10 @@
 lib_LTLIBRARIES = libknightswidgets.la
 
 libknightswidgets_la_SOURCES = \
-	RoundTable.cc
+	RoundTable.cc \
+	TreeView.cc \
+	Statistic.cc \
+	Journal.cc
 
 libknightswidgets_la_LIBADD = \
 	${RSVG_LIBS} \

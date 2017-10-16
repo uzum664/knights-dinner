@@ -8,8 +8,24 @@
 			<post-create-function>roundtable_postcreate</post-create-function>
                 </glade-widget-class>
 	</glade-widget-classes>
+	
+	<glade-widget-classes>
+                <glade-widget-class name="gtkmm__CustomObject_statistic" generic-name="statistic" title="Statistic" >
+			<get-type-function>ustatistic_get_type</get-type-function>
+			<post-create-function>statistic_postcreate</post-create-function>
+                </glade-widget-class>
+	</glade-widget-classes>
+	
+	<glade-widget-classes>
+                <glade-widget-class name="gtkmm__CustomObject_journal" generic-name="journal" title="Journal" >
+			<get-type-function>ujournal_get_type</get-type-function>
+			<post-create-function>journal_postcreate</post-create-function>
+                </glade-widget-class>
+	</glade-widget-classes>
 
 	<glade-widget-group name="knights" title="knights Widgets">
 		<glade-widget-class-ref name="gtkmm__CustomObject_roundtable"/>
+		<glade-widget-class-ref name="gtkmm__CustomObject_statistic"/>
+		<glade-widget-class-ref name="gtkmm__CustomObject_journal"/>
 	</glade-widget-group>
 </glade-catalog>
