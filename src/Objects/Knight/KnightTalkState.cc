@@ -38,7 +38,7 @@ bool KnightTalkState::activate( Knight* knight )
 	MESSAGE(knight, " рассказывает историю");
 	
 	// выставляем время окончания рассказа
-	setStateEndTime( knight, time(NULL) + getTalkTimeout(knight) );
+	setStateEndTime( time(NULL) + knight->getTalkTimeout() );
 	
 	// сбрасываем флаг, чтоб иметь возможность поменять ножи
 	resetSwappedKnifes(knight);
@@ -52,7 +52,7 @@ bool KnightTalkState::activate( Knight* knight )
 bool KnightTalkState::deactivate( Knight* knight )
 {
 	// Ждать ножи актуально только в состоянии разговора, поэтому если вышли то сбрасываем флаг, не путаем других рыцарей
-	if( isKnifesDifferent(knight) )
+	if( knight->isKnifesDifferent() )
 		resetWaitingDifferentKnifes(knight);
 	
 	return true;
@@ -61,7 +61,7 @@ bool KnightTalkState::deactivate( Knight* knight )
 void KnightTalkState::step( Knight* knight )
 {
 	// проверяем кончился ли рассказ
-	if( isStateEndTime( knight, time(NULL) ) )
+	if( isStateEndTime( time(NULL) ) )
 	{
 		changeState( knight, KnightTransientState::Instance() );
 		return;
@@ -69,11 +69,11 @@ void KnightTalkState::step( Knight* knight )
 	
 	// если ножи разные то сбрасываем флаг
 	// иначе запрашиваем соседей на смену ножей
-	if( isKnifesDifferent(knight) )
+	if( knight->isKnifesDifferent() )
 	{
 		resetWaitingDifferentKnifes(knight);
 	}
-	else if( !isWaitingDifferentKnifes(knight) )
+	else if( !knight->isWaitingDifferentKnifes() )
 	{
 		ostringstream os;
 		os << *knight << " ask for swapping knifes" << endl;
@@ -82,7 +82,7 @@ void KnightTalkState::step( Knight* knight )
 	}
 	
 	// Если нужно поменяли ножи местами
-	if( !needSwapKnifes(knight) )
+	if( !knight->needSwapKnifes() )
 		return;
 	
 	if( !takeKnifes(knight) )

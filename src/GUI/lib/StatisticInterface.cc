@@ -62,7 +62,7 @@ bool StatisticInterface::poll()
 	{
 		Statistic::ColumnsPack pack;
 		ostringstream os;
-		os << (it->knight->name_);
+		os << it->knight->getName();
 		pack.name = os.str();
 		switch( it->knight->getState() )
 		{
@@ -76,7 +76,7 @@ bool StatisticInterface::poll()
 				pack.state = "рассказывает";
 				break;
 		}
-		Place* place = it->knight->place_;
+		Place* place = it->knight->getPlace();
 		
 		if( dynamic_cast<FoodKnife*>(*place->getLeftKnife()) )
 			pack.left_knife = Statistic::FOOD_KNIFE;
@@ -88,8 +88,8 @@ bool StatisticInterface::poll()
 		else if( dynamic_cast<CutterKnife*>(*place->getRightKnife()) )
 			pack.right_knife = Statistic::CUTTER_KNIFE;
 		
-		pack.meals = it->knight->meal_num_;
-		pack.stories = it->knight->story_num_;
+		pack.meals = it->knight->getMeals();
+		pack.stories = it->knight->getStories();
 		stats_->updateRow(it->row, pack);
 	}
 	// не заканчиваем цикл вызова

@@ -32,13 +32,13 @@ void KnightTransientState::Destroy()
 void KnightTransientState::step( Knight* knight )
 {
 	// если не голодны или рассказали хотя бы 1 историю, возвращаемся в ожидание
-	if( !isHungry(knight) && toldStory(knight) )
+	if( !knight->isHungry() && knight->toldStory() )
 	{
 		changeState( knight, KnightWaitingState::Instance() );
 		return;
 	}
 	// если нет разрешения обедать то болтаем
-	if( !hasPermision(knight) )
+	if( !knight->hasPermision() )
 	{
 		ostringstream os;
 		os << knight << "::step() нет разрешения" <<  endl;
@@ -47,7 +47,7 @@ void KnightTransientState::step( Knight* knight )
 		return;
 	}
 	// если не голодны, болтаем
-	if( !isHungry(knight) )
+	if( !knight->isHungry() )
 	{
 		ostringstream os;
 		os << knight << "::step() не голоден" <<  endl;
@@ -56,7 +56,7 @@ void KnightTransientState::step( Knight* knight )
 		return;
 	}
 	// если ножи одинаковые, болтаем
-	if( !isKnifesDifferent(knight) )
+	if( !knight->isKnifesDifferent() )
 	{
 		ostringstream os;
 		os << knight << "::step() ножи одинаковые" <<  endl;
@@ -66,7 +66,7 @@ void KnightTransientState::step( Knight* knight )
 	}
 	
 	// если ножи заняты, болтаем
-	if( !isKnifesAvailable(knight) )
+	if( !knight->isKnifesAvailable() )
 	{
 		ostringstream os;
 		os << knight << "::step() ножи заняты" <<  endl;

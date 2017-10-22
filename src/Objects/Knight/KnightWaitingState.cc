@@ -32,7 +32,7 @@ void KnightWaitingState::Destroy()
 bool KnightWaitingState::activate( Knight* knight )
 {
 	// выставляем время окончания ожидания
-	setStateEndTime( knight, time(NULL) + getWaitingTimeout(knight) );
+	setStateEndTime( time(NULL) + knight->getWaitingTimeout() );
 	
 	// сбрасываем флаг, чтоб иметь возможность поменять ножи
 	resetSwappedKnifes(knight);
@@ -46,25 +46,25 @@ bool KnightWaitingState::activate( Knight* knight )
 void KnightWaitingState::step( Knight* knight )
 {
 	// если не заняли место остаемся в ожидании
-	if( !hasPlace(knight) )
+	if( !knight->hasPlace() )
 		return;
 	
 	// если голодны или не рассказали хотя бы 1 историю 
-	if( isHungry(knight) || !toldStory(knight) )
+	if( knight->isHungry() || !knight->toldStory() )
 	{
 		changeState( knight, KnightTransientState::Instance() );
 		return;
 	}
 	
 	// проверяем время ожидания
-	if( isStateEndTime( knight, time(NULL) ) )
+	if( isStateEndTime( time(NULL) ) )
 	{
 		changeState( knight, KnightTransientState::Instance() );
 		return;
 	}
 	
 	// Если нужно поменяли ножи местами
-	if( !needSwapKnifes(knight) )
+	if( !knight->needSwapKnifes() )
 		return;
 	
 	if( !takeKnifes(knight) )

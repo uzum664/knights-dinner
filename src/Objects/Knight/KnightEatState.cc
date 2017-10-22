@@ -42,7 +42,7 @@ bool KnightEatState::activate( Knight* knight )
 	MESSAGE(knight, " кушает");
 	
 	// выставляем время окончания приема пищи
-	setStateEndTime( knight, time(NULL) + getEatTimeout(knight) );
+	setStateEndTime( time(NULL) + knight->getEatTimeout() );
 	
 	// сбрасываем флаг, чтоб иметь возможность поменять ножи
 	resetSwappedKnifes(knight);
@@ -57,7 +57,7 @@ bool KnightEatState::deactivate( Knight* knight )
 {
 	// Поели, положили ножи на место
 	// Если нужно поменяли ножи местами
-	if( needSwapKnifes(knight) )
+	if( knight->needSwapKnifes() )
 		swapKnifes(knight);
 	
 	putKnifes(knight);
@@ -67,7 +67,7 @@ bool KnightEatState::deactivate( Knight* knight )
 void KnightEatState::step( Knight* knight )
 {
 	// проверяем кончилась ли еда
-	if( isStateEndTime( knight, time(NULL) ) )
+	if( isStateEndTime( time(NULL) ) )
 	{
 		changeState( knight, KnightTransientState::Instance() );
 		return;

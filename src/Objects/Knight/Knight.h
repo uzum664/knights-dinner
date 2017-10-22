@@ -9,7 +9,7 @@
 #define MESSAGE(who, text) \
 { \
 	ostringstream os; \
-	os << who->name_ << text; \
+	os << who->getName() << text; \
 	cout << os.str() << endl; \
 	MessageQueue::push(os.str()); \
 }
@@ -19,7 +19,6 @@ namespace knights
 
 class Place;
 class KnightState;
-class StatisticInterface;
 void* knight_thread( void* param );
 
 /*!
@@ -30,8 +29,8 @@ void* knight_thread( void* param );
 		- если взял оба ножа то может их поменять местами
 	Так как к рыцарю может быть осуществлен доступ из основного потока после вызова run() то в mutex_ обернуты:
 		- основной цикл рыцаря thread
-		- public методы
-	В классах KnightState нельзя использовать public методы Knight, так как Knight должен гарантировать что при вызовах в KnightState mutex_ уже залочен.
+		- некоторые public методы
+	В классах KnightState нельзя использовать некоторые public методы Knight которые лочат mutex_, так как в KnightState mutex_ уже залочен.
 	В классах KnightState можно использовать методы базового KnightState
 */
 
@@ -42,6 +41,17 @@ class Knight
 		virtual ~Knight();
 		
 		int getPollTimeout() { return 100; } // время цикла рыцаря, мс
+		int getWaitingTimeout() { return 3; } // время на ожидание, с
+		int getEatTimeout() { return 3; } // время на поесть, с
+		int getTalkTimeout() { return 3; } // время на рассказ, с
+		
+		/* методы нельзя использовать в KnightStatе, так как в них лочится mutex_ */
+		std::string textStatistic();	// Статистика рыцаря
+		bool askSwapKnifes();		// Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
+		bool hasDifferentKnifes();	// У рыцаря есть подходящие ножи
+		bool putOn( Place* place );	// посадить рыцаря на место
+		void permit( bool permition );	// разрешить кушать
+		/**/
 		
 		enum State
 		{
@@ -51,19 +61,23 @@ class Knight
 			TRANSIENT
 		};
 		State getState(); // Состояние рыцаря
-		std::string textStatistic(); // Статистика рыцаря
-		bool askSwapKnifes(); // Попросить рыцаря поменять ножи местами ( с проверкой что ножи у него действительно разные)
-		bool isWaitingDifferentKnifes(); // Рыцарь ждет подходящих ножей
-		bool hasDifferentKnifes(); // У рыцаря есть подходящие ножи
-		bool hasPermision(); // есть разрешение
-		bool hasLeftKnife(); // Рыцарь взял левый нож
-		bool hasRightKnife(); // Рыцарь взял правый нож
-		int getHunger(); // Уровень голода рыцаря
-		bool isHungry(); // рыцарь голоден
-		bool toldStory(); // рыцарь рассказал хотя бы 1 историю
-		void permit( bool permition ); // разрешить кушать
-		bool putOn( Place* place ); // посадить рыцаря на место
+		std::string getName() { return name_; }
+		Place* getPlace() const { return place_; } // место рыцаря
+		bool hasPlace() const { return place_ != NULL; } // Рыцарь занял место
+		bool isKnifesAvailable(); // Ножи не заняты?
+		bool isKnifesDifferent(); // Разные ножи?
+		bool isWaitingDifferentKnifes() { return waiting_knifes_; } // Рыцарь ждет подходящих ножей
+		bool needSwapKnifes() { return need_swap_knifes_; } // Рыцарю нужно поменять ножи
+		bool hasPermision() { return has_permition_; } // есть разрешение
+		bool hasLeftKnife() { return has_left_knife_; } // Рыцарь взял левый нож
+		bool hasRightKnife() { return has_right_knife_; } // Рыцарь взял правый нож
+		bool toldStory() { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
+		bool isHungry() { return hunger_ > 0; } // рыцарь голоден
+		int getHunger() { return hunger_; } // Уровень голода рыцаря
+		int getMeals() { return meal_num_; }
+		int getStories() { return story_num_; }
 		void run(); // Запускает поток рыцаря
+		
 		static void lookFor(Knight* knight); // Ожидание завершения потока
 		
 	protected:
@@ -78,11 +92,6 @@ class Knight
 		friend std::ostream& operator<<(std::ostream& os, Knight& knight );
 		friend std::ostream& operator<<(std::ostream& os, Knight* knight );
 		friend class KnightState;
-		friend class KnightEatState;
-		friend class KnightTalkState;
-		friend class KnightWaitingState;
-		friend class KnightTransientState;
-		friend class StatisticInterface;
 		
 		int hunger_; // голод рыцаря
 		
@@ -99,7 +108,6 @@ class Knight
 		bool waiting_knifes_; // флаг ожидания ножей
 		bool need_swap_knifes_; // флаг для смены ножей
 		bool swapped_knifes_; // флаг что уже менял ножи
-		time_t state_timeout_; // время окончания состояния (для Eat и Talk)
 		pthread_mutex_t mutex_; // mutex доступа к рыцарю
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;

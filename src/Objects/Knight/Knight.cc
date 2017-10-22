@@ -102,133 +102,15 @@ void Knight::thread()
 	}
 }
 //---------------------------------------------------------------------------------------
-Knight::State Knight::getState()
-{
-	State result = WAITING;
-	pthread_mutex_lock(&mutex_);
-	if( dynamic_cast<KnightWaitingState*>(state_) )
-		result = WAITING;
-	else if( dynamic_cast<KnightEatState*>(state_) )
-		result = EAT;
-	else if( dynamic_cast<KnightTalkState*>(state_) )
-		result = TALK;
-	else if( dynamic_cast<KnightTransientState*>(state_) )
-		result = TRANSIENT;
-	pthread_mutex_unlock(&mutex_);
-	return result;
-}
-//---------------------------------------------------------------------------------------
 std::string Knight::textStatistic()
 {
 	ostringstream os;
+	// лочим mutex что бы гарантировать что в поток os попадут актуальные данные
 	pthread_mutex_lock(&mutex_);
 	os << *this << ":\thunger=" << hunger_ << "\t meals=" << meal_num_ << "\tstories=" << story_num_ << "\tpermition=" << has_permition_;
 	os << "\tleft=" << has_left_knife_ << "\t right=" << has_right_knife_ << "\twaiting=" << waiting_knifes_ << "\tneed_swap=" << need_swap_knifes_;
 	pthread_mutex_unlock(&mutex_);
 	return os.str();
-}
-//---------------------------------------------------------------------------------------
-bool Knight::hasLeftKnife()
-{
-	bool has;
-	pthread_mutex_lock(&mutex_);
-	has = has_left_knife_;
-	pthread_mutex_unlock(&mutex_);
-	return has;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::hasRightKnife()
-{
-	bool has;
-	pthread_mutex_lock(&mutex_);
-	has = has_right_knife_;
-	pthread_mutex_unlock(&mutex_);
-	return has;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::askSwapKnifes()
-{
-	pthread_mutex_lock(&mutex_);
-	if( !place_ )
-	{
-		pthread_mutex_unlock(&mutex_);
-		return false;
-	}
-	if( !place_->isKnifesDifferent() )
-	{
-		pthread_mutex_unlock(&mutex_);
-		return false;
-	}
-	if( swapped_knifes_ )
-	{
-		pthread_mutex_unlock(&mutex_);
-		return false;
-	}
-	need_swap_knifes_ = true;
-	pthread_mutex_unlock(&mutex_);
-	return true;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::isWaitingDifferentKnifes()
-{
-	bool waiting;
-	pthread_mutex_lock(&mutex_);
-	waiting = waiting_knifes_;
-	pthread_mutex_unlock(&mutex_);
-	return waiting;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::hasDifferentKnifes()
-{
-	pthread_mutex_lock(&mutex_);
-	if( !place_ )
-	{
-		pthread_mutex_unlock(&mutex_);
-		return false;
-	}
-	if( !place_->isKnifesDifferent() )
-	{
-		pthread_mutex_unlock(&mutex_);
-		return false;
-	}
-	pthread_mutex_unlock(&mutex_);
-	return true;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::hasPermision()
-{
-	bool permition;
-	pthread_mutex_lock(&mutex_);
-	permition = has_permition_;
-	pthread_mutex_unlock(&mutex_);
-	return permition;
-}
-//---------------------------------------------------------------------------------------
-int Knight::getHunger()
-{
-	int hunger;
-	pthread_mutex_lock(&mutex_);
-	hunger = hunger_;
-	pthread_mutex_unlock(&mutex_);
-	return hunger;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::isHungry()
-{
-	bool hungry;
-	pthread_mutex_lock(&mutex_);
-	hungry = hunger_ > 0;
-	pthread_mutex_unlock(&mutex_);
-	return hungry;
-}
-//---------------------------------------------------------------------------------------
-bool Knight::toldStory()
-{
-	bool story;
-	pthread_mutex_lock(&mutex_);
-	story = story_num_ > 0;
-	pthread_mutex_unlock(&mutex_);
-	return story;
 }
 //---------------------------------------------------------------------------------------
 void Knight::permit( bool permition )
@@ -256,6 +138,74 @@ bool Knight::putOn( Place* place )
 	}
 	pthread_mutex_unlock(&mutex_);
 	return false;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::askSwapKnifes()
+{
+	pthread_mutex_lock(&mutex_);
+	if( !place_ )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	if( !place_->isKnifesDifferent() )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	if( swapped_knifes_ )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	need_swap_knifes_ = true;
+	pthread_mutex_unlock(&mutex_);
+	return true;
+}
+//---------------------------------------------------------------------------------------
+bool Knight::hasDifferentKnifes()
+{
+	pthread_mutex_lock(&mutex_);
+	if( !place_ )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	if( !place_->isKnifesDifferent() )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
+	pthread_mutex_unlock(&mutex_);
+	return true;
+}
+//---------------------------------------------------------------------------------------
+Knight::State Knight::getState()
+{
+	KnightState* state = state_; // копируем указатель в локальную переменную (атомарная операция)
+	if( dynamic_cast<KnightWaitingState*>(state) )
+		return WAITING;
+	else if( dynamic_cast<KnightEatState*>(state) )
+		return EAT;
+	else if( dynamic_cast<KnightTalkState*>(state) )
+		return TALK;
+	else if( dynamic_cast<KnightTransientState*>(state) )
+		return TRANSIENT;
+	return WAITING;
+}
+// ---------------------------------------------------------------------------
+bool Knight::isKnifesAvailable()
+{
+	Place* place = place_; // копируем указатель в локальную переменную (атомарная операция)
+	if( place->isLeftKnifeTaken() || place->isRightKnifeTaken() )
+		return false;
+	return true;
+}
+// ---------------------------------------------------------------------------
+bool Knight::isKnifesDifferent()
+{
+	Place* place = place_; // копируем указатель в локальную переменную (атомарная операция)
+	return place->isKnifesDifferent();
 }
 //---------------------------------------------------------------------------------------
 void Knight::changeState( KnightState* state )

@@ -23,6 +23,7 @@ class Knight;
 			- в конце трапезы переходит в KnightTransientState
 		KnightTalkState - рассказ истории
 			- в конце рассказа переходит в KnightTransientState
+	Проверки в наследниках KnightState производятся через методы Knight, а любые изменения через методы интерфейса KnightState
 */
 
 class KnightState
@@ -44,36 +45,26 @@ class KnightState
 		{
 			return os;
 		}
-		
-		int getWaitingTimeout( Knight* knight ) { return 5; } // время на ожидание, с
-		int getEatTimeout( Knight* knight ) { return 5; } // время на поесть, с
-		int getTalkTimeout( Knight* knight ) { return 5; } // время на рассказ, с
 
 	protected:
 		KnightState();
 		KnightState* getState( Knight* knight );
 		void changeState( Knight* knight, KnightState* state );
-		bool hasPlace( Knight* knight ) const { return knight->place_ != NULL; } // Рыцарь занял место
-		bool hasPermision( Knight* knight ) const { return knight->has_permition_; } // есть разрешение
-		bool isHungry( Knight* knight ) const { return knight->hunger_ > 0; } // рыцарь голоден
-		bool toldStory( Knight* knight ) const { return knight->story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
 		void tellStory( Knight* knight ) { knight->tellStory(); } // рыцарь рассказывает историю
 		void eat( Knight* knight ) { knight->eat(); } // рыцарь кушает
+		
 		void setWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = true; } // Выставить флаг ожидания ножей
 		void resetWaitingDifferentKnifes( Knight* knight ) { knight->waiting_knifes_ = false; } // Сбросить флаг ожидания ножей
-		bool isWaitingDifferentKnifes( Knight* knight ) { return knight->waiting_knifes_; } // Рыцарь ждет подходящих ножей
-		bool needSwapKnifes( Knight* knight ) { return knight->need_swap_knifes_; } // Рыцарю нужно поменять ножи
 		void resetSwappedKnifes( Knight* knight ) { knight->swapped_knifes_ = false; } // Сбросить флаг смены ножей
 		bool swapKnifes( Knight* knight ); // Пробуем поменять ножи
 		bool takeKnifes( Knight* knight ); // Пробуем взять ножи
 		bool putKnifes( Knight* knight ); // Положить ножи
-		bool isKnifesDifferent( Knight* knight ); // Разные ножи?
-		bool isKnifesAvailable( Knight* knight ); // Ножи не заняты?
-		void setStateEndTime( Knight* knight, const time_t& time ) { knight->state_timeout_ = time; } // выставляем время окончания состояния
-		bool isStateEndTime( Knight* knight, const time_t& time ) { return ( time >= knight->state_timeout_ ); } // проверяем время окончания состояния
+		
+		void setStateEndTime( const time_t& time ) { state_timeout_ = time; } // выставляем время окончания состояния
+		bool isStateEndTime( const time_t& time ) { return ( time >= state_timeout_ ); } // проверяем время окончания состояния
 
 	private:
-		Place* getPlace( Knight* knight ) const { return knight->place_; } // место рыцаря
+		time_t state_timeout_; // время таймаута состояния (для Eat и Talk)
 		static KnightState* inst_;
 };
 // ---------------------------------------------------------------------------

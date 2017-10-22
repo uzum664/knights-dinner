@@ -53,7 +53,8 @@ void TableInterface::init()
 	// формируем массив knife_keys_, т.е. выстраиваем соответствие ножа своему спрайту (Knife* -> RoundTable::ImageKey)
 	{
 		RoundTable::ImageKey i = 0;
-		for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
+		Table::Knifes knifes = table->getKnifes();
+		for(Table::Knifes::iterator it = knifes.begin() ; it != knifes.end(); ++it, ++i )
 		{
 			if( dynamic_cast<FoodKnife*>(*it) )
 			{
@@ -85,7 +86,8 @@ bool TableInterface::poll()
 	// Проверяем и перемещаем ножи
 	{
 		RoundTable::ImagePosition i = 0;
-		for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
+		Table::Knifes knifes = table->getKnifes();
+		for(Table::Knifes::iterator it = knifes.begin() ; it != knifes.end(); ++it, ++i )
 		{
 			if( !*it )
 				continue;
@@ -96,7 +98,8 @@ bool TableInterface::poll()
 	// Проверяем и выводим состояние рыцаря
 	{
 		RoundTable::ImageKey i = 0;
-		for( Table::Places::iterator it = table->places_.begin() ; it != table->places_.end(); ++it, ++i )
+		Table::Places places = table->getPlaces();
+		for( Table::Places::iterator it = places.begin() ; it != places.end(); ++it, ++i )
 		{
 			if( !*it )
 				continue;

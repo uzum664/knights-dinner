@@ -22,6 +22,7 @@ void HungryKnight::tellStory()
 //---------------------------------------------------------------------------------------
 void HungryKnight::eat()
 {
+	// Подменяем логику насыщения
 	int hunger = hunger_;
 	Knight::eat();
 	hunger_ = hunger - (1 / hunger_power_);
