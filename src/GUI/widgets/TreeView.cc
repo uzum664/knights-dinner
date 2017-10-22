@@ -69,7 +69,7 @@ void TreeView::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("№", pRenderer);
 		pColumn->add_attribute(pRenderer->property_text(), COLUMN(number));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(84);
+		pColumn->set_fixed_width(32);
 		pRenderer->property_xalign() = 0.5;
 	}
 }

@@ -53,7 +53,7 @@ void Statistic::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("Состояние", pRenderer);
 		pColumn->add_attribute(pRenderer->property_text(), COLUMN(state));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(84);
+		pColumn->set_fixed_width(110);
 		pRenderer->property_xalign() = 0.5;
 	}
 	
@@ -62,7 +62,7 @@ void Statistic::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("Левый нож", pRenderer);
 		pColumn->add_attribute(pRenderer->property_pixbuf(), COLUMN(left_knife));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(32);
+		pColumn->set_fixed_width(94);
 		pRenderer->property_xalign() = 0.5;
 	}
 
@@ -71,7 +71,7 @@ void Statistic::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("Правый нож", pRenderer);
 		pColumn->add_attribute(pRenderer->property_pixbuf(), COLUMN(right_knife));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(32);
+		pColumn->set_fixed_width(94);
 		pRenderer->property_xalign() = 0.5;
 	}
 
@@ -80,7 +80,7 @@ void Statistic::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("Приемы пищи", pRenderer);
 		pColumn->add_attribute(pRenderer->property_text(), COLUMN(meals));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(84);
+		pColumn->set_fixed_width(110);
 		pRenderer->property_xalign() = 0.5;
 	}
 
@@ -89,7 +89,7 @@ void Statistic::init_treeview()
 		Gtk::TreeViewColumn* pColumn = add_column("Истории", pRenderer);
 		pColumn->add_attribute(pRenderer->property_text(), COLUMN(stories));
 		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
-		pColumn->set_fixed_width(84);
+		pColumn->set_fixed_width(70);
 		pRenderer->property_xalign() = 0.5;
 	}
 }

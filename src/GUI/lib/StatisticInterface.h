@@ -24,8 +24,18 @@ namespace knights
 			
 		private:
 			static StatisticInterface* stats_interface_;
-			Statistic* stats_;
-			typedef std::map<Knight*, unsigned int> Knights;
+			Statistic* stats_; // виджет таблица
+			struct KnightInfo
+			{
+				KnightInfo(Knight* k) :
+				knight(k)
+				,row(0)
+				{
+				}
+				Knight* knight; // рыцарь отображаемый в строке
+				unsigned int row; // строка в таблице
+			};
+			typedef std::list<KnightInfo> Knights;
 			Knights knights_;
 
 	};

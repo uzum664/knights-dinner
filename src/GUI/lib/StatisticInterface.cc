@@ -28,13 +28,13 @@ StatisticInterface::StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& g
 		cerr << "StatisticInterface(): No dinner object!" << endl;
 		throw;
 	}
-	
+	// наполняем список рыцарей
 	Dinner::Knights knights = dinner->getKnights();
 	for(Dinner::Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		knights_[*it] = 0;
-	
+		knights_.push_back(KnightInfo(*it));
+	// подключаем отложенную инициализацию
 	stats_->signal_realize().connect( sigc::mem_fun( this, &StatisticInterface::init) );
-	
+	// цикл алгоритма обновления
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &StatisticInterface::poll ), getPollTimeout() );
 }
 // -------------------------------------------------------------------------
@@ -51,8 +51,9 @@ StatisticInterface*  StatisticInterface::Instance( const Glib::RefPtr<Gnome::Gla
 // -------------------------------------------------------------------------
 void StatisticInterface::init()
 {
+	// добавляем рыцарей в таблицу в том порядке, как сидят
 	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
-		it->second = stats_->addRow();
+		it->row = stats_->addRow();
 }
 // -------------------------------------------------------------------------
 bool StatisticInterface::poll()
@@ -61,12 +62,12 @@ bool StatisticInterface::poll()
 	{
 		Statistic::ColumnsPack pack;
 		ostringstream os;
-		os << (*it->first);
+		os << (it->knight->name_);
 		pack.name = os.str();
-		switch( it->first->getState() )
+		switch( it->knight->getState() )
 		{
 			case Knight::WAITING:
-				pack.state = "ожидание";
+				pack.state = "ожидает";
 				break;
 			case Knight::EAT:
 				pack.state = "кушает";
@@ -75,7 +76,7 @@ bool StatisticInterface::poll()
 				pack.state = "рассказывает";
 				break;
 		}
-		Place* place = it->first->place_;
+		Place* place = it->knight->place_;
 		
 		if( dynamic_cast<FoodKnife*>(*place->getLeftKnife()) )
 			pack.left_knife = Statistic::FOOD_KNIFE;
@@ -87,9 +88,9 @@ bool StatisticInterface::poll()
 		else if( dynamic_cast<CutterKnife*>(*place->getRightKnife()) )
 			pack.right_knife = Statistic::CUTTER_KNIFE;
 		
-		pack.meals = it->first->meal_num_;
-		pack.stories = it->first->story_num_;
-		stats_->updateRow(it->second, pack);
+		pack.meals = it->knight->meal_num_;
+		pack.stories = it->knight->story_num_;
+		stats_->updateRow(it->row, pack);
 	}
 	// не заканчиваем цикл вызова
 	return true;

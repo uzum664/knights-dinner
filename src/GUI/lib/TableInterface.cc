@@ -28,9 +28,9 @@ TableInterface::TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml 
 		cerr << "TableInterface(): No table ???" << endl;
 		throw;
 	}
-	
+	// подключаем отложенную инициализацию
 	gui_table_->signal_realize().connect( sigc::mem_fun( this, &TableInterface::init) );
-	
+	// цикл алгоритма обновления
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &TableInterface::poll ), getPollTimeout() );
 }
 // -------------------------------------------------------------------------
@@ -50,12 +50,14 @@ void TableInterface::init()
 	Table* table = Table::Instance();
 	if( !table )
 		return;
+	// формируем массив knife_keys_, т.е. выстраиваем соответствие ножа своему спрайту (Knife* -> RoundTable::ImageKey)
 	{
 		RoundTable::ImageKey i = 0;
 		for(Table::Knifes::iterator it = table->knifes_.begin() ; it != table->knifes_.end(); ++it, ++i )
 		{
 			if( dynamic_cast<FoodKnife*>(*it) )
 			{
+				// меняем картинку в соответствии с типом ножа
 				gui_table_->setKnife(i, RoundTable::FOOD_KNIFE);
 				ostringstream os;
 				os << "TableInterface" << "() нож " << i << " для еды" <<  endl;
@@ -63,6 +65,7 @@ void TableInterface::init()
 			}
 			else if( dynamic_cast<CutterKnife*>(*it) )
 			{
+				// меняем картинку в соответствии с типом ножа
 				gui_table_->setKnife(i, RoundTable::CUTTER_KNIFE);
 				ostringstream os;
 				os << "TableInterface" << "() нож " << i << " для нарезки" <<  endl;
