@@ -9,8 +9,8 @@
 #define MESSAGE(who, text) \
 { \
 	ostringstream os; \
-	os << who->name_ << text << endl; \
-	cout << os.str(); \
+	os << who->name_ << text; \
+	cout << os.str() << endl; \
 	MessageQueue::push(os.str()); \
 }
 

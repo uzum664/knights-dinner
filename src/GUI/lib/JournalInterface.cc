@@ -1,4 +1,5 @@
 #include "JournalInterface.h"
+#include "Configuration.h"
 #include <iostream>
 // -------------------------------------------------------------------------
 using namespace std;
@@ -36,6 +37,13 @@ JournalInterface*  JournalInterface::Instance( const Glib::RefPtr<Gnome::Glade::
 // -------------------------------------------------------------------------
 bool JournalInterface::poll()
 {
+	while( !MessageQueue::empty() )
+	{
+		Message message = MessageQueue::pop();
+		journal_->addRow( message.getMessage(), message.getTime() );
+		// 1 сообщение за 1 poll(), что бы сообщения не сыпались пачкой
+		break;
+	}
 	// не заканчиваем цикл вызова
 	return true;
 }

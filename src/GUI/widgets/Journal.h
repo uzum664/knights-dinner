@@ -2,6 +2,7 @@
 #define _Journal_H
 // -------------------------------------------------------------------------
 #include "TreeView.h"
+#include "Configuration.h"
 
 namespace knights
 {
@@ -28,7 +29,8 @@ namespace knights
 			explicit Journal(TreeView::BaseObjectType* gobject);
 			virtual ~Journal();
 			
-			void addRow( const std::string& text ); // добавить запись
+			void addRow( const std::string& text, const time_t& time = 0 ); // добавить запись
+			void addRow( Message& message ); // добавить запись Message
 			
 		protected:
 			virtual void init_treeview();

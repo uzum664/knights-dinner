@@ -57,7 +57,7 @@ void Journal::init_treeview()
 	}
 }
 // -------------------------------------------------------------------------
-void Journal::addRow( const std::string& text )
+void Journal::addRow( const std::string& text, const time_t& time )
 {
 	unsigned int number = TreeView::addRow();
 	Gtk::TreeNodeChildren::reverse_iterator iter = tree_model_ref_->children().rbegin();
@@ -66,11 +66,16 @@ void Journal::addRow( const std::string& text )
 	gchar timestr[20];
 	{
 		struct tm tm;
-		time_t sec = row[COLUMN(time)];
+		time_t sec = (time > 0) ? time : row[COLUMN(time)];
 		localtime_r(&sec, &tm);
 		strftime(timestr, 20, "%d.%m.%Y %H:%M:%S", &tm);
 	}
 	row[COLUMN(time_string)] = timestr;
 	row[COLUMN(text_message)] = text;
+}
+// -------------------------------------------------------------------------
+void Journal::addRow( Message& message )
+{
+	addRow( message.getMessage(), message.getTime() );
 }
 // -------------------------------------------------------------------------

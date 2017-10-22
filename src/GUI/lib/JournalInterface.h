@@ -12,7 +12,7 @@ namespace knights
 			static JournalInterface* Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml = Glib::RefPtr<Gnome::Glade::Xml>() );
 			virtual ~JournalInterface();
 			
-			int getPollTimeout() { return 200; } // период цикла обработки данных, мс
+			int getPollTimeout() { return 100; } // период цикла обработки данных, мс
 			
 		protected:
 			JournalInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml );
