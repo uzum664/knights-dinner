@@ -3,6 +3,7 @@
 // -------------------------------------------------------------------------
 #include <exception>
 #include <sstream>
+#include <queue>
 // -------------------------------------------------------------------------
 // вспомогательный define для вывода логов..
 #define PRELOG myname << "(" << __FUNCTION__ << "): "
@@ -20,6 +21,25 @@ namespace knights
 			Exception(){};
 		private:
 			std::string description_;
+	};
+	// -----------------------------------------------------------------------------
+	class MessageQueue
+	{
+		public:
+			static MessageQueue* Instance();
+			virtual ~MessageQueue() {}
+			
+			typedef std::string Message;
+			static bool empty();
+			static void push( const Message& message );
+			static Message pop();
+			
+		protected:
+			MessageQueue() {};
+			
+		private:
+			static MessageQueue* message_queue_;
+			std::queue<std::string> messages_;
 	};
 	// -----------------------------------------------------------------------------
 	inline long sign( const long v )

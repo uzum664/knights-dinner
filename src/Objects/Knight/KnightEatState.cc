@@ -1,5 +1,6 @@
 #include "Knight.h"
 #include "KnightState.h"
+#include "Configuration.h"
 #include <unistd.h>
 #include <sstream>
 // -------------------------------------------------------------------------
@@ -38,6 +39,7 @@ bool KnightEatState::activate( Knight* knight )
 	
 	// едим сначала, что бы алгоритму было проще подсчитывать приоритеты
 	eat(knight);
+	MESSAGE(knight, " кушает");
 	
 	// выставляем время окончания приема пищи
 	setStateEndTime( knight, time(NULL) + getEatTimeout(knight) );

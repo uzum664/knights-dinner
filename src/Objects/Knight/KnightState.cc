@@ -1,6 +1,7 @@
 #include "Knight.h"
 #include "KnightState.h"
 #include "Place.h"
+#include "Configuration.h"
 #include <sstream>
 // -------------------------------------------------------------------------
 using namespace std;
@@ -70,15 +71,24 @@ bool KnightState::isKnifesDifferent( Knight* knight )
 bool KnightState::takeKnifes( Knight* knight )
 {
 	Place* place = getPlace(knight);
+	// проверяем что правый нож не занят (иначе левый брать бесполезно)
+	if( place->isRightKnifeTaken() )
+		return false;
 	// пытаемся взять ножи
 	if( !place->takeLeftKnife() )
 		return false;
 	
+	MESSAGE(knight, " взял нож слева");
+	
 	if( !place->takeRightKnife() )
 	{
+		MESSAGE(knight, " положил нож слева");
 		place->putLeftKnife();
 		return false;
 	}
+	
+	MESSAGE(knight, " взял нож справа");
+	
 	knight->has_left_knife_ = true;
 	knight->has_right_knife_ = true;
 	return true;
@@ -88,11 +98,14 @@ bool KnightState::putKnifes( Knight* knight )
 {
 	if( !knight->has_left_knife_ || !knight->has_right_knife_ )
 		return false;
+	
 	Place* place = getPlace(knight);
 	place->putLeftKnife();
 	place->putRightKnife();
 	knight->has_left_knife_ = false;
 	knight->has_right_knife_ = false;
+	MESSAGE(knight, " положил нож слева");
+	MESSAGE(knight, " положил нож справа");
 	return true;
 }
 // ---------------------------------------------------------------------------
@@ -100,13 +113,13 @@ bool KnightState::swapKnifes( Knight* knight )
 {
 	if( !knight->has_left_knife_ || !knight->has_right_knife_ )
 		return false;
+	
 	Place* place = getPlace(knight);
-	ostringstream os;
-	os << *knight << " swap knifes" << endl;
-	cout << os.str();
 	knight->need_swap_knifes_ = false;
 	knight->swapped_knifes_ = true;
 	place->swapKnifes();
+	MESSAGE(knight, " поменял ножи местам");
+	
 	return true;
 }
 // ---------------------------------------------------------------------------

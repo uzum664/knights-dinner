@@ -5,6 +5,15 @@
 #include <iostream>
 #include <pthread.h>
 
+// макрос для логов и сообщений рыцаря
+#define MESSAGE(who, text) \
+{ \
+	ostringstream os; \
+	os << who->name_ << text << endl; \
+	cout << os.str(); \
+	MessageQueue::push(os.str()); \
+}
+
 namespace knights
 {
 
@@ -68,6 +77,10 @@ class Knight
 		friend std::ostream& operator<<(std::ostream& os, Knight& knight );
 		friend std::ostream& operator<<(std::ostream& os, Knight* knight );
 		friend class KnightState;
+		friend class KnightEatState;
+		friend class KnightTalkState;
+		friend class KnightWaitingState;
+		friend class KnightTransientState;
 		
 		int hunger_; // голод рыцаря
 		

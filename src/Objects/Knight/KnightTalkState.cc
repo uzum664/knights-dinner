@@ -1,5 +1,6 @@
 #include "Knight.h"
 #include "KnightState.h"
+#include "Configuration.h"
 #include <unistd.h>
 #include <sstream>
 // -------------------------------------------------------------------------
@@ -34,6 +35,7 @@ bool KnightTalkState::activate( Knight* knight )
 {
 	// рассказываем сначала, что бы алгоритму было проще подсчитывать приоритеты
 	tellStory(knight);
+	MESSAGE(knight, " рассказывает историю");
 	
 	// выставляем время окончания рассказа
 	setStateEndTime( knight, time(NULL) + getTalkTimeout(knight) );
