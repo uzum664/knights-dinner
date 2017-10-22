@@ -14,7 +14,7 @@ namespace knights
 	class Exception : public std::exception
 	{
 		public:
-			Exception(std::string description) throw();
+			Exception(const std::string& description) throw();
 			virtual ~Exception() throw() {};
 			virtual const char* what() const throw();
 		protected:
@@ -22,24 +22,45 @@ namespace knights
 		private:
 			std::string description_;
 	};
+	class MessageQueue;
+	// -----------------------------------------------------------------------------
+	// Сообщение - хранит текст и метку времени
+	class Message
+	{
+		public:
+			Message(const std::string& message ) : message_(message) {}
+			virtual ~Message() {}
+			time_t getTime() { return time_; }
+			std::string getMessage() { return message_; }
+			
+		protected:
+			Message() {};
+			
+		private:
+			friend class MessageQueue;
+			std::string message_;
+			time_t time_;
+	};
 	// -----------------------------------------------------------------------------
 	class MessageQueue
 	{
 		public:
 			static MessageQueue* Instance();
-			virtual ~MessageQueue() {}
+			virtual ~MessageQueue();
 			
-			typedef std::string Message;
+			//typedef std::string Message;
 			static bool empty();
-			static void push( const Message& message );
-			static Message pop();
+			static void push( const std::string& text );
+			static void push( Message& message );
+			static Message pop(); // получить первое сообщение из очереди (в очереди сообщение удаляется)
 			
 		protected:
-			MessageQueue() {};
+			MessageQueue();
 			
 		private:
 			static MessageQueue* message_queue_;
-			std::queue<std::string> messages_;
+			std::queue<Message> messages_;
+			pthread_mutex_t mutex_; // mutex доступа к очереди
 	};
 	// -----------------------------------------------------------------------------
 	inline long sign( const long v )
