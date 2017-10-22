@@ -40,18 +40,27 @@ void KnightTransientState::step( Knight* knight )
 	// если нет разрешения обедать то болтаем
 	if( !hasPermision(knight) )
 	{
+		ostringstream os;
+		os << knight << "::step() нет разрешения" <<  endl;
+		cout << os.str();
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
 	// если не голодны, болтаем
 	if( !isHungry(knight) )
 	{
+		ostringstream os;
+		os << knight << "::step() не голоден" <<  endl;
+		cout << os.str();
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
 	// если ножи одинаковые, болтаем
 	if( !isKnifesDifferent(knight) )
 	{
+		ostringstream os;
+		os << knight << "::step() ножи одинаковые" <<  endl;
+		cout << os.str();
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}
@@ -59,6 +68,9 @@ void KnightTransientState::step( Knight* knight )
 	// если ножи заняты, болтаем
 	if( !isKnifesAvailable(knight) )
 	{
+		ostringstream os;
+		os << knight << "::step() ножи заняты" <<  endl;
+		cout << os.str();
 		changeState( knight, KnightTalkState::Instance() );
 		return;
 	}

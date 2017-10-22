@@ -41,6 +41,36 @@
             <property name="y">50</property>
           </packing>
         </child>
+        <child>
+          <widget class="gtkmm__CustomObject_statistic" id="statistic1">
+            <property name="width_request">750</property>
+            <property name="height_request">440</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+            <property name="food_knife_image_path">./svg/food_knife.svg</property>
+            <property name="cutter_knife_image_path">./svg/cutter_knife.svg</property>
+          </widget>
+          <packing>
+            <property name="x">500</property>
+            <property name="y">30</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="gtkmm__CustomObject_journal" id="journal1">
+            <property name="width_request">1220</property>
+            <property name="height_request">500</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
+          </widget>
+          <packing>
+            <property name="x">30</property>
+            <property name="y">500</property>
+          </packing>
+        </child>
       </widget>
     </child>
   </widget>

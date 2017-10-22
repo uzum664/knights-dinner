@@ -32,11 +32,12 @@ class Dinner
 		virtual bool addHungryKnight( const std::string& name ); // добавить рыцаря с уровнем голода и посадить за стол
 		int getPlaceNum() { return place_num_; } // Получить количество мест за столом
 		void waitThread();
+		typedef std::list<Knight*> Knights;
+		Knights getKnights() { return knights; } // Получить список рыцарей
 		
 	protected:
 		void thread(); // поток обеда обеда
 		friend void* dinner_thread( void* param );
-		typedef std::list<Knight*> Knights;
 		Knights knights; // список рыцарей
 		
 	private:

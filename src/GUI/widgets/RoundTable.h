@@ -37,7 +37,6 @@ namespace knights
 			virtual void on_realize();
 
 		private:
-			
 			void constructor();
 			void on_place_number_changed();
 			

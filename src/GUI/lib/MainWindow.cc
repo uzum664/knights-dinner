@@ -43,7 +43,7 @@ MainWindow::MainWindow (string gladedir, string guifile, string svgdir) :
 	// инициализируем обмен данных для Журнала
 	JournalInterface::Instance(gxml);
 	// инициализируем обмен данных для Статистики
-	StatisticInterface::Instance(gxml);
+	StatisticInterface::Instance(gxml, dinner);
 	
 	draw_splash(1);
 }

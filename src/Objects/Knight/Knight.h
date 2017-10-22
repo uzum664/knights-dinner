@@ -19,6 +19,7 @@ namespace knights
 
 class Place;
 class KnightState;
+class StatisticInterface;
 void* knight_thread( void* param );
 
 /*!
@@ -81,6 +82,7 @@ class Knight
 		friend class KnightTalkState;
 		friend class KnightWaitingState;
 		friend class KnightTransientState;
+		friend class StatisticInterface;
 		
 		int hunger_; // голод рыцаря
 		

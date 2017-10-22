@@ -45,9 +45,9 @@ class KnightState
 			return os;
 		}
 		
-		int getWaitingTimeout( Knight* knight ) { return 3; } // время на ожидание, с
-		int getEatTimeout( Knight* knight ) { return 3; } // время на поесть, с
-		int getTalkTimeout( Knight* knight ) { return 3; } // время на рассказ, с
+		int getWaitingTimeout( Knight* knight ) { return 5; } // время на ожидание, с
+		int getEatTimeout( Knight* knight ) { return 5; } // время на поесть, с
+		int getTalkTimeout( Knight* knight ) { return 5; } // время на рассказ, с
 
 	protected:
 		KnightState();

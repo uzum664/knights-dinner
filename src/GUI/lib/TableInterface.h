@@ -15,11 +15,11 @@ namespace knights
 			virtual ~TableInterface();
 			
 			int getPollTimeout() { return 200; } // период цикла обработки данных, мс
-			void init();
 			
 		protected:
 			TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml );
 			TableInterface() {};
+			void init();
 			bool poll();
 			
 		private:

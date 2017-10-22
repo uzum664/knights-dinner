@@ -2,13 +2,13 @@
 #define _JournalInterface_H
 
 #include <libglademm.h>
-//#include "Journal.h"
+#include "Journal.h"
 
 namespace knights
 {
 	class JournalInterface
 	{
-		public:;
+		public:
 			static JournalInterface* Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml = Glib::RefPtr<Gnome::Glade::Xml>() );
 			virtual ~JournalInterface();
 			
@@ -21,7 +21,7 @@ namespace knights
 			
 		private:
 			static JournalInterface* journal_interface_;
-			//Journal* journal_;
+			Journal* journal_;
 
 	};
 }
