@@ -6,20 +6,20 @@ using namespace knights;
 // -------------------------------------------------------------------------
 JournalInterface* JournalInterface::journal_interface_ = NULL;
 // -------------------------------------------------------------------------
-JournalInterface::JournalInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml )
-//	journal_(NULL)
+JournalInterface::JournalInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml ) :
+	journal_(NULL)
 {
 	if( !gladexml )
 	{
 		cerr << "JournalInterface(): Wrong glade!" << endl;
 		throw;
 	}
-	/*gladexml->get_widget("journal1", journal_);
+	gladexml->get_widget("journal1", journal_);
 	if( !journal_ )
 	{
 		cerr << "JournalInterface(): No 'journal1' in glade!" << endl;
 		throw;
-	}*/
+	}
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &JournalInterface::poll ), getPollTimeout() );
 }
 // -------------------------------------------------------------------------

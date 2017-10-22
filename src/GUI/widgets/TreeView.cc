@@ -80,6 +80,9 @@ unsigned int TreeView::addRow()
 	Gtk::TreeRow row = *iter;
 	row[COLUMN(number)] = ++row_number_;
 	row[COLUMN(time)] = time(NULL);
+	// перемещаемся но добавленную строку
+	Gtk::TreePath path(row);
+	tree_view_.scroll_to_row(path);
 	return row_number_;
 }
 // -------------------------------------------------------------------------

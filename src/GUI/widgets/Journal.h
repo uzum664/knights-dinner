@@ -28,6 +28,8 @@ namespace knights
 			explicit Journal(TreeView::BaseObjectType* gobject);
 			virtual ~Journal();
 			
+			void addRow( const std::string& text ); // добавить запись
+			
 		protected:
 			virtual void init_treeview();
 
