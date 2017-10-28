@@ -55,7 +55,7 @@ void PriorityDinner::step()
 			next = *nextIt;
 		
 		// проверяем что рыцарю нужен другой тип ножа и что ему разрешено кушать, запрашиваем у соседей поочереди
-		if( (*it)->isWaitingDifferentKnifes() && (*it)->hasPermision() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) );
+		!(*it)->hasDifferentKnifes() && (*it)->isWaitingDifferentKnifes() && (*it)->hasPermision() && ( prev->askSwapKnifes() || next->askSwapKnifes() );
 		
 		prev = *it;
 	}
