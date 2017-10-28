@@ -25,6 +25,7 @@ namespace knights
 				FOOD_KNIFE,
 				CUTTER_KNIFE
 			};
+			bool setKnightName( const ImageKey& number, const std::string& name );
 			bool setKnight( const ImageKey& number, const ImageType& type );
 			bool setKnife( const ImageKey& number, const ImageType& type );
 			void moveKnife( const ImageKey& number, const ImagePosition& pos );
@@ -49,7 +50,9 @@ namespace knights
 			
 			struct ImageState
 			{
+				ImageState() : image(NULL), label(NULL) {}
 				Gtk::Image* image;
+				Gtk::Label* label;
 				int x;
 				int y;
 				ImagePosition pos;

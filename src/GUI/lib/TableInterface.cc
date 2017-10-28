@@ -108,6 +108,8 @@ bool TableInterface::poll()
 			if( !knight )
 				continue;
 			
+			gui_table_->setKnightName(i, knight->getName());
+			
 			switch( knight->getState() )
 			{
 				case Knight::WAITING:

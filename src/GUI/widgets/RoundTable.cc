@@ -73,6 +73,9 @@ void RoundTable::on_place_number_changed()
 		moveKnife( i, i );
 		knight_images_[i].image->show();
 		knife_images_[i].image->show();
+		knight_images_[i].label = new Gtk::Label();
+		put(*knight_images_[i].label, 0, 0);
+		knight_images_[i].label->hide();
 	}
 }
 // -------------------------------------------------------------------------
@@ -100,6 +103,20 @@ void RoundTable::on_realize()
 		moveKnight( i, i );
 		moveKnife( i, i );
 	}
+}
+// -------------------------------------------------------------------------
+bool RoundTable::setKnightName( const ImageKey& number, const std::string& name )
+{
+	if( number >= get_place_number() )
+		return false;
+	if( !knight_images_[number].label )
+		return false;
+	knight_images_[number].label->set_text( name );
+	// после присвоения имени сдвигаем Рыцаря
+	// так как в нем расчитываются новые координаты Имени с учетом высоты и длины label
+	moveKnight(number, number);
+	knight_images_[number].label->show();
+	return true;
 }
 // -------------------------------------------------------------------------
 bool RoundTable::setKnight( const ImageKey& number, const ImageType& type )
@@ -145,6 +162,13 @@ void RoundTable::moveKnight( const ImageKey& number, const ImagePosition& pos )
 {
 	getPosition( knight_images_[number].x, knight_images_[number].y, angle_step_ * 4 * pos );
 	move( *knight_images_[number].image, knight_images_[number].x, knight_images_[number].y );
+	// Имя выводим выше и посередине
+	if( knight_images_[number].label )
+	{
+		int x = knight_images_[number].x - knight_images_[number].label->get_width() / 2;
+		int y = knight_images_[number].y - knight_images_[number].label->get_height() - 3; // на 3 пикселя выше спрайта
+		move( *knight_images_[number].label, x, y );
+	}
 }
 // -------------------------------------------------------------------------
 void RoundTable::moveKnife( const ImageKey& number, const ImagePosition& pos )
