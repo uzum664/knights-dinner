@@ -20,6 +20,12 @@ int main(int argc, char **argv)
 		string guifile  = "gui.glade";
 		string gladedir = "./";
 		string svgdir   = "svg/";
+		string theme = "./";
+
+		if ( !theme.empty() )
+		{
+			gtk_rc_parse( (theme + "/gtkrc").c_str() );
+		}
 
 		MainWindow* mw = MainWindow::Instance(gladedir, guifile, svgdir);
 		Kit.run(*mw->w);
