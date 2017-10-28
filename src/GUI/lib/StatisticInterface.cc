@@ -77,16 +77,18 @@ bool StatisticInterface::poll()
 				break;
 		}
 		Place* place = it->knight->getPlace();
-		
-		if( dynamic_cast<FoodKnife*>(*place->getLeftKnife()) )
-			pack.left_knife = Statistic::FOOD_KNIFE;
-		else if( dynamic_cast<CutterKnife*>(*place->getLeftKnife()) )
-			pack.left_knife = Statistic::CUTTER_KNIFE;
-		
-		if( dynamic_cast<FoodKnife*>(*place->getRightKnife()) )
-			pack.right_knife = Statistic::FOOD_KNIFE;
-		else if( dynamic_cast<CutterKnife*>(*place->getRightKnife()) )
-			pack.right_knife = Statistic::CUTTER_KNIFE;
+		if( place )
+		{
+			if( dynamic_cast<FoodKnife*>(*place->getLeftKnife()) )
+				pack.left_knife = Statistic::FOOD_KNIFE;
+			else if( dynamic_cast<CutterKnife*>(*place->getLeftKnife()) )
+				pack.left_knife = Statistic::CUTTER_KNIFE;
+			
+			if( dynamic_cast<FoodKnife*>(*place->getRightKnife()) )
+				pack.right_knife = Statistic::FOOD_KNIFE;
+			else if( dynamic_cast<CutterKnife*>(*place->getRightKnife()) )
+				pack.right_knife = Statistic::CUTTER_KNIFE;
+		}
 		
 		pack.meals = it->knight->getMeals();
 		pack.stories = it->knight->getStories();

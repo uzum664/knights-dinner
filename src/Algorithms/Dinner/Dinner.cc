@@ -7,20 +7,35 @@
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
+Dinner::Knights Dinner::knights_;
+unsigned int Dinner::knights_owners_ = 0;
 //---------------------------------------------------------------------------------------
 Dinner::Dinner( const int& num ) :
 	running_(false)
 	,place_num_(num)
 {
-	table = Table::Instance(5);
+	table_ = Table::Instance(place_num_);
+	knights_owners_++;
+}
+//---------------------------------------------------------------------------------------
+Dinner::Dinner( const Dinner& dinner ) :
+	running_(false)
+	,place_num_(dinner.place_num_)
+{
+	table_ = dinner.table_;
+	knights_owners_++;
 }
 //---------------------------------------------------------------------------------------
 Dinner::~Dinner()
 {
 	stop();
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		if( *it )
-			delete *it;
+	if( knights_owners_-- == 0 )
+	{
+		for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
+			if( *it )
+				delete *it;
+		knights_.clear();
+	}
 }
 //---------------------------------------------------------------------------------------
 void* knights::dinner_thread( void* param )
@@ -46,11 +61,12 @@ void Dinner::start()
 	if( running_ )
 		return;
 	
-	cout << table << endl;
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	cout << table_ << endl;
+	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 	{
 		(*it)->permit(true);
-		(*it)->putOn(table->findFreePlace());
+		if( !(*it)->hasPlace() )
+			(*it)->putOn(table_->findFreePlace());
 	}
 	
 	pthread_attr_init(&thread_attr_);
@@ -65,7 +81,7 @@ void Dinner::start()
 //---------------------------------------------------------------------------------------
 void Dinner::stop()
 {
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 		(*it)->permit(false);
 	
 	// прерываем поток
@@ -78,6 +94,7 @@ void Dinner::stop()
 			os << "main(): error: can't cancel thread, status = " << status;
 			throw Exception( os.str() );
 		}
+		running_ = false;
 	}
 }
 //---------------------------------------------------------------------------------------
@@ -91,7 +108,7 @@ void Dinner::thread()
 		bool anyoneHungry = false;
 		bool someoneNotToldStory = false;
 		
-		for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+		for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 		{
 			// проверяем что хоть кто то голоден
 			if( (*it)->isHungry() )
@@ -109,7 +126,7 @@ void Dinner::thread()
 		if( ( prev + 3 ) <= now )
 		{
 			ostringstream os;
-			for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+			for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 				os << (*it)->textStatistic() << endl;
 			cout << os.str();
 			prev = now;
@@ -125,21 +142,21 @@ void Dinner::thread()
 //---------------------------------------------------------------------------------------
 bool Dinner::addKnight( const std::string& name )
 {
-	if( knights.size() >= getPlaceNum() )
+	if( knights_.size() >= getPlaceNum() )
 		return false;
 	Knight* knight = new Knight( name );
 	knight->run();
-	knights.push_back( knight );
+	knights_.push_back( knight );
 	return true;
 }
 //---------------------------------------------------------------------------------------
 bool Dinner::addHungryKnight( const std::string& name )
 {
-	if( knights.size() >= getPlaceNum() )
+	if( knights_.size() >= getPlaceNum() )
 		return false;
 	Knight* knight = new HungryKnight( name, 10, 0.25 );
 	knight->run();
-	knights.push_back( knight );
+	knights_.push_back( knight );
 	return true;
 }
 //---------------------------------------------------------------------------------------

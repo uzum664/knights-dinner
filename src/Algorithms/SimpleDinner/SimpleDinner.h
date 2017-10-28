@@ -16,6 +16,7 @@ class SimpleDinner :
 {
 	public:
 		SimpleDinner( const int& num = 5 );
+		SimpleDinner( const Dinner& dinner );
 		virtual ~SimpleDinner();
 		virtual void step(); // шаг обеда
 		

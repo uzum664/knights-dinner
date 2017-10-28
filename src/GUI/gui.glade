@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <glade-interface>
-  <!-- interface-requires knights 2.6 -->
-  <requires lib="knights"/>
   <!-- interface-requires gtk+ 2.6 -->
+  <requires lib="knights"/>
+  <!-- interface-requires knights 2.6 -->
+  <!-- interface-requires knights 2.6 -->
   <!-- interface-naming-policy toplevel-contextual -->
   <!-- interface-local-resource-path ../../GUI/svg -->
   <widget class="GtkWindow" id="window1">
@@ -59,7 +60,7 @@
         </child>
         <child>
           <widget class="gtkmm__CustomObject_journal" id="journal1">
-            <property name="width_request">1220</property>
+            <property name="width_request">750</property>
             <property name="height_request">500</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
@@ -67,8 +68,112 @@
             <property name="vscrollbar_policy">automatic</property>
           </widget>
           <packing>
-            <property name="x">30</property>
+            <property name="x">500</property>
             <property name="y">500</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="button1">
+            <property name="label" translatable="yes">Старт</property>
+            <property name="width_request">100</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="start" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">60</property>
+            <property name="y">740</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="button2">
+            <property name="label" translatable="yes">Стоп</property>
+            <property name="width_request">100</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="stop" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">220</property>
+            <property name="y">740</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="simple_algorithm">
+            <property name="label" translatable="yes">Простой обед</property>
+            <property name="width_request">200</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="choose" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">500</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="hungry_algorithm">
+            <property name="label" translatable="yes">Обед голодных рыцарей</property>
+            <property name="width_request">200</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="group">simple_algorithm</property>
+            <signal name="toggled" handler="choose" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">570</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="priority_algorithm">
+            <property name="label" translatable="yes">Обед с приоритетами</property>
+            <property name="width_request">200</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <property name="group">simple_algorithm</property>
+            <signal name="toggled" handler="choose" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">640</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkVButtonBox" id="vbuttonbox1">
+            <property name="width_request">100</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+            <child>
+              <placeholder/>
+            </child>
+          </widget>
+          <packing>
+            <property name="x">303</property>
+            <property name="y">1035</property>
           </packing>
         </child>
       </widget>

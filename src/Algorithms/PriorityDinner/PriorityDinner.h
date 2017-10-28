@@ -16,6 +16,7 @@ class PriorityDinner :
 {
 	public:
 		PriorityDinner( const int& num = 5 );
+		PriorityDinner( const Dinner& dinner );
 		virtual ~PriorityDinner();
 		virtual void step(); // шаг обеда
 		virtual void start(); // начать обед

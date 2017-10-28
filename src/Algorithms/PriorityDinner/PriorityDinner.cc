@@ -10,6 +10,12 @@ PriorityDinner::PriorityDinner( const int& num ) :
 {
 }
 //---------------------------------------------------------------------------------------
+PriorityDinner::PriorityDinner( const Dinner& dinner ) :
+	Dinner(dinner)
+	,max_permitions_(getPlaceNum() / 2)
+{
+}
+//---------------------------------------------------------------------------------------
 PriorityDinner::~PriorityDinner()
 {
 }
@@ -17,7 +23,7 @@ PriorityDinner::~PriorityDinner()
 void PriorityDinner::start()
 {
 	// наполняем список сортируемый по голоду
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 		hungryKnights.push_back( *it );
 	Dinner::start();
 }
@@ -37,14 +43,14 @@ void PriorityDinner::step()
 	
 	// считаем что рыцари сидят по порядку
 	// пока рассадка идет через вызов table->findFreePlace() который должен выдавать по порядку
-	Knight* prev = knights.back();
+	Knight* prev = knights_.back();
 	Knight* next = NULL;
-	for(Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 	{
 		Knights::iterator nextIt = it;
 		nextIt++;
-		if( nextIt == knights.end() )
-			next = knights.front();
+		if( nextIt == knights_.end() )
+			next = knights_.front();
 		else
 			next = *nextIt;
 		

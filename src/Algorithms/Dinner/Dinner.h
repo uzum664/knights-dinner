@@ -24,6 +24,7 @@ class Dinner
 {
 	public:
 		Dinner( const int& num = 5 );
+		Dinner( const Dinner& dinner );
 		virtual ~Dinner();
 		virtual void step(){}; // шаг обеда
 		virtual void start(); // начать обед ( просто выдаем разрешение рыцарем кушать и запускаем поток если не был запущен)
@@ -33,19 +34,20 @@ class Dinner
 		int getPlaceNum() { return place_num_; } // Получить количество мест за столом
 		void waitThread();
 		typedef std::list<Knight*> Knights;
-		Knights getKnights() { return knights; } // Получить список рыцарей
+		Knights getKnights() { return knights_; } // Получить список рыцарей
 		
 	protected:
 		void thread(); // поток обеда обеда
 		friend void* dinner_thread( void* param );
-		Knights knights; // список рыцарей
+		static Knights knights_; // список рыцарей
 		
 	private:
 		bool running_; // флаг что уже запущен поток
-		Table* table; // стол
+		Table* table_; // стол
 		int place_num_; // кол-во мест за столом
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;
+		static unsigned int knights_owners_; // кол-во обедов (счетчик для удаления рыцарей когда будут удалены все экземпляры обедов)
 };
 
 }
