@@ -51,6 +51,7 @@ class Knight
 		bool hasDifferentKnifes();	// У рыцаря есть подходящие ножи
 		bool putOn( Place* place );	// посадить рыцаря на место
 		void permit( bool permition );	// разрешить кушать
+		void wait( bool set );		// перевод в состояние waiting
 		/**/
 		
 		enum State
@@ -69,6 +70,7 @@ class Knight
 		bool isWaitingDifferentKnifes() { return waiting_knifes_; } // Рыцарь ждет подходящих ножей
 		bool needSwapKnifes() { return need_swap_knifes_; } // Рыцарю нужно поменять ножи
 		bool hasPermision() { return has_permition_; } // есть разрешение
+		bool isWaiting() { return waiting_; }
 		bool hasLeftKnife() { return has_left_knife_; } // Рыцарь взял левый нож
 		bool hasRightKnife() { return has_right_knife_; } // Рыцарь взял правый нож
 		bool toldStory() { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
@@ -103,7 +105,8 @@ class Knight
 		bool has_left_knife_; // Нож слева взят в руке
 		unsigned int meal_num_; // Количество приемов пищи
 		unsigned int story_num_; // Количество рассказанных историй
-		bool has_permition_; // есть разрешение начать обед
+		bool has_permition_; // есть разрешение кушать
+		bool waiting_;
 		Place* place_; // Место за столом
 		bool waiting_knifes_; // флаг ожидания ножей
 		bool need_swap_knifes_; // флаг для смены ножей

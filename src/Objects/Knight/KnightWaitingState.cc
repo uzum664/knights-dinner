@@ -45,6 +45,10 @@ bool KnightWaitingState::activate( Knight* knight )
 // ---------------------------------------------------------------------------
 void KnightWaitingState::step( Knight* knight )
 {
+	// принудительное ожидание (пауза)
+	if( knight->isWaiting() )
+		return;
+	
 	// если не заняли место остаемся в ожидании
 	if( !knight->hasPlace() )
 		return;

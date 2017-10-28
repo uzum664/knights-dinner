@@ -64,6 +64,7 @@ void Dinner::start()
 	cout << table_ << endl;
 	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 	{
+		(*it)->wait(false);
 		(*it)->permit(true);
 		if( !(*it)->hasPlace() )
 			(*it)->putOn(table_->findFreePlace());
@@ -82,7 +83,7 @@ void Dinner::start()
 void Dinner::stop()
 {
 	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
-		(*it)->permit(false);
+		(*it)->wait(true);
 	
 	// прерываем поток
 	if( running_ )

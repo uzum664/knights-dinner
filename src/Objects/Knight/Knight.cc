@@ -16,6 +16,7 @@ Knight::Knight( const std::string& name ) :
 	,meal_num_(0)
 	,story_num_(0)
 	,has_permition_(false)
+	,waiting_(false)
 	,place_(NULL)
 	,waiting_knifes_(false)
 	,need_swap_knifes_(false)
@@ -117,6 +118,15 @@ void Knight::permit( bool permition )
 {
 	pthread_mutex_lock(&mutex_);
 	has_permition_ = permition;
+	pthread_mutex_unlock(&mutex_);
+}
+//---------------------------------------------------------------------------------------
+void Knight::wait( bool set )
+{
+	pthread_mutex_lock(&mutex_);
+	waiting_ = set;
+	if( waiting_ )
+		changeState( KnightWaitingState::Instance() );
 	pthread_mutex_unlock(&mutex_);
 }
 //---------------------------------------------------------------------------------------
