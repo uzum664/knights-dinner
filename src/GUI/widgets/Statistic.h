@@ -19,6 +19,7 @@ namespace knights
 			add(right_knife);
 			add(meals);
 			add(stories);
+			add(hunger);
 		}
 
 		Gtk::TreeModelColumn<std::string> name;
@@ -27,6 +28,7 @@ namespace knights
 		Gtk::TreeModelColumn<Glib::RefPtr<Gdk::Pixbuf> > right_knife;
 		Gtk::TreeModelColumn<unsigned int> meals;
 		Gtk::TreeModelColumn<unsigned int> stories;
+		Gtk::TreeModelColumn<unsigned int> hunger;
 	};
 
 	class Statistic : public TreeView
@@ -50,6 +52,7 @@ namespace knights
 				ImageType right_knife;
 				unsigned int meals;
 				unsigned int stories;
+				unsigned int hunger;
 			};
 			
 			void updateRow( const unsigned int& number, const ColumnsPack& data ); // обновить запись

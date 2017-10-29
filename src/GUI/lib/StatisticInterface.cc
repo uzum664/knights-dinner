@@ -92,6 +92,7 @@ bool StatisticInterface::poll()
 		
 		pack.meals = it->knight->getMeals();
 		pack.stories = it->knight->getStories();
+		pack.hunger = it->knight->getHunger();
 		stats_->updateRow(it->row, pack);
 	}
 	// не заканчиваем цикл вызова

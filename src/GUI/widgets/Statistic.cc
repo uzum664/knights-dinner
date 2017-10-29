@@ -92,6 +92,15 @@ void Statistic::init_treeview()
 		pColumn->set_fixed_width(70);
 		pRenderer->property_xalign() = 0.5;
 	}
+
+	{
+		Gtk::CellRendererText* pRenderer = Gtk::manage( new Gtk::CellRendererText() );
+		Gtk::TreeViewColumn* pColumn = add_column("Голод", pRenderer);
+		pColumn->add_attribute(pRenderer->property_text(), COLUMN(hunger));
+		pColumn->set_sizing(Gtk::TREE_VIEW_COLUMN_FIXED);
+		pColumn->set_fixed_width(50);
+		pRenderer->property_xalign() = 0.5;
+	}
 }
 // -------------------------------------------------------------------------
 void Statistic::updateRow( const unsigned int& number, const ColumnsPack& data )
@@ -113,6 +122,7 @@ void Statistic::updateRow( const unsigned int& number, const ColumnsPack& data )
 			row[COLUMN(right_knife)] = get_cutter_knife_image_path();
 		row[COLUMN(meals)] = data.meals;
 		row[COLUMN(stories)] = data.stories;
+		row[COLUMN(hunger)] = data.hunger;
 	}
 }
 // -------------------------------------------------------------------------

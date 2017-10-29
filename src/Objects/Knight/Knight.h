@@ -75,7 +75,7 @@ class Knight
 		bool hasRightKnife() { return has_right_knife_; } // Рыцарь взял правый нож
 		bool toldStory() { return story_num_ > 0; } // рыцарь рассказал хотя бы 1 историю
 		bool isHungry() { return hunger_ > 0; } // рыцарь голоден
-		int getHunger() { return hunger_; } // Уровень голода рыцаря
+		unsigned int getHunger() { return (hunger_ > 0) ? hunger_ : 0; } // Уровень голода рыцаря
 		int getMeals() { return meal_num_; }
 		int getStories() { return story_num_; }
 		void run(); // Запускает поток рыцаря
