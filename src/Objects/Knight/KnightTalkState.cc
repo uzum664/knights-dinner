@@ -33,8 +33,6 @@ void KnightTalkState::Destroy()
 // ---------------------------------------------------------------------------
 bool KnightTalkState::activate( Knight* knight )
 {
-	// рассказываем сначала, что бы алгоритму было проще подсчитывать приоритеты
-	tellStory(knight);
 	MESSAGE(knight, " рассказывает историю");
 	
 	// выставляем время окончания рассказа
@@ -63,15 +61,21 @@ void KnightTalkState::step( Knight* knight )
 	// проверяем кончился ли рассказ
 	if( isStateEndTime( time(NULL) ) )
 	{
+		tellStory(knight);
 		changeState( knight, KnightTransientState::Instance() );
 		return;
 	}
-	
 	// если ножи разные то сбрасываем флаг
 	// иначе запрашиваем соседей на смену ножей
 	if( knight->isKnifesDifferent() )
 	{
 		resetWaitingDifferentKnifes(knight);
+		// если ножи разные и не заняты ...
+		// т.е. когда соседи освободили ножи после TransientState текущего рыцаря
+		// то можно прервать рассказ ради еды
+		// если прервали рассказ tellStory не будет вызван
+		if( knight->isKnifesAvailable() && knight->toldStory() && knight->isHungry() && knight->hasPermision() )
+			changeState( knight, KnightEatState::Instance() );
 	}
 	else if( !knight->isWaitingDifferentKnifes() )
 	{
@@ -80,7 +84,6 @@ void KnightTalkState::step( Knight* knight )
 		cout << os.str();
 		setWaitingDifferentKnifes(knight);
 	}
-	
 	// Если нужно поменяли ножи местами
 	if( !knight->needSwapKnifes() )
 		return;

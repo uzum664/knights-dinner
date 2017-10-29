@@ -37,8 +37,6 @@ bool KnightEatState::activate( Knight* knight )
 	if( !takeKnifes(knight) )
 		return false;
 	
-	// едим сначала, что бы алгоритму было проще подсчитывать приоритеты
-	eat(knight);
 	MESSAGE(knight, " кушает");
 	
 	// выставляем время окончания приема пищи
@@ -69,6 +67,7 @@ void KnightEatState::step( Knight* knight )
 	// проверяем кончилась ли еда
 	if( isStateEndTime( time(NULL) ) )
 	{
+		eat(knight);
 		changeState( knight, KnightTransientState::Instance() );
 		return;
 	}
