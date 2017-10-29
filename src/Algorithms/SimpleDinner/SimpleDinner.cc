@@ -43,7 +43,7 @@ void SimpleDinner::step()
 			next = *nextIt;
 		
 		// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
-		if( (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() ) );
+		!(*it)->hasDifferentKnifes() && (*it)->isWaitingDifferentKnifes() && ( prev->askSwapKnifes() || next->askSwapKnifes() );
 		
 		prev = *it;
 	}

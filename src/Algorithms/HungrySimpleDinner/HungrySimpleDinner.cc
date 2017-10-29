@@ -43,7 +43,7 @@ void HungrySimpleDinner::step()
 			next = *nextIt;
 		
 		// проверяем что рыцарю нужен другой тип ножа, запрашиваем у соседей поочереди
-		if( (*it)->isWaitingDifferentKnifes() )
+		if( !(*it)->hasDifferentKnifes() && (*it)->isWaitingDifferentKnifes() )
 		{
 			// запрашиваем только у того соседа который менее голодный
 			// ну и естественно запрашивающий рыцарь должен быть голоднее
