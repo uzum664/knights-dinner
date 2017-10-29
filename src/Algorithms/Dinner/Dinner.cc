@@ -13,6 +13,7 @@ unsigned int Dinner::dinner_counter_ = 0;
 Dinner::Dinner( const int& num ) :
 	running_(false)
 	,place_num_(num)
+	,time_begin_(0)
 {
 	table_ = Table::Instance(place_num_);
 	dinner_counter_++;
@@ -21,6 +22,7 @@ Dinner::Dinner( const int& num ) :
 Dinner::Dinner( const Dinner& dinner ) :
 	running_(false)
 	,place_num_(dinner.place_num_)
+	,time_begin_(dinner.time_begin_)
 {
 	table_ = dinner.table_;
 	dinner_counter_++;
@@ -112,8 +114,9 @@ void Dinner::stop()
 //---------------------------------------------------------------------------------------
 void Dinner::thread()
 {
-	int begin = time(NULL);
-	int prev = begin;
+	if( time_begin_ == 0 )
+		time_begin_ = time(NULL);
+	int prev = time(NULL);
 	while( true )
 	{
 		step();
@@ -147,10 +150,9 @@ void Dinner::thread()
 		usleep(100000);
 	}
 	ostringstream os;
-	os << "Обед закончен";
-	MessageQueue::push(os.str());
-	os << " за " << ( time(NULL) - begin ) << " сек" << endl;
+	os << "Обед закончен за " << ( time(NULL) - time_begin_ ) << " сек";
 	cout << os.str() << endl;
+	MessageQueue::push(os.str());
 	running_ = false;
 }
 //---------------------------------------------------------------------------------------

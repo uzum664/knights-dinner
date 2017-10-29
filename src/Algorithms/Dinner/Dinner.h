@@ -49,6 +49,7 @@ class Dinner
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;
 		static unsigned int dinner_counter_; // кол-во обедов (счетчик для удаления рыцарей когда будут удалены все экземпляры обедов)
+		time_t time_begin_;
 };
 
 }
