@@ -84,7 +84,7 @@
           </widget>
           <packing>
             <property name="x">60</property>
-            <property name="y">740</property>
+            <property name="y">810</property>
           </packing>
         </child>
         <child>
@@ -99,7 +99,7 @@
           </widget>
           <packing>
             <property name="x">200</property>
-            <property name="y">740</property>
+            <property name="y">810</property>
           </packing>
         </child>
         <child>
@@ -114,19 +114,20 @@
           </widget>
           <packing>
             <property name="x">340</property>
-            <property name="y">740</property>
+            <property name="y">810</property>
           </packing>
         </child>
         <child>
           <widget class="GtkRadioButton" id="simple_algorithm">
             <property name="label" translatable="yes">Простой обед</property>
-            <property name="width_request">200</property>
+            <property name="width_request">250</property>
             <property name="height_request">80</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="active">True</property>
             <property name="draw_indicator">True</property>
+            <property name="group">smart_algorithm</property>
             <signal name="toggled" handler="choose" swapped="no"/>
           </widget>
           <packing>
@@ -137,14 +138,14 @@
         <child>
           <widget class="GtkRadioButton" id="hungry_algorithm">
             <property name="label" translatable="yes">Обед голодных рыцарей</property>
-            <property name="width_request">200</property>
+            <property name="width_request">250</property>
             <property name="height_request">80</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="active">True</property>
             <property name="draw_indicator">True</property>
-            <property name="group">simple_algorithm</property>
+            <property name="group">smart_algorithm</property>
             <signal name="toggled" handler="choose" swapped="no"/>
           </widget>
           <packing>
@@ -155,19 +156,36 @@
         <child>
           <widget class="GtkRadioButton" id="priority_algorithm">
             <property name="label" translatable="yes">Обед с приоритетами</property>
-            <property name="width_request">200</property>
+            <property name="width_request">250</property>
             <property name="height_request">80</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
             <property name="active">True</property>
             <property name="draw_indicator">True</property>
-            <property name="group">simple_algorithm</property>
+            <property name="group">smart_algorithm</property>
             <signal name="toggled" handler="choose" swapped="no"/>
           </widget>
           <packing>
             <property name="x">50</property>
             <property name="y">640</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkRadioButton" id="smart_algorithm">
+            <property name="label" translatable="yes">Умный обед (рекомендуемый)</property>
+            <property name="width_request">250</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">False</property>
+            <property name="active">True</property>
+            <property name="draw_indicator">True</property>
+            <signal name="toggled" handler="choose" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">50</property>
+            <property name="y">710</property>
           </packing>
         </child>
         <child>

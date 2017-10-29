@@ -8,6 +8,7 @@
 #include "SimpleDinner/SimpleDinner.h"
 #include "HungrySimpleDinner/HungrySimpleDinner.h"
 #include "PriorityDinner/PriorityDinner.h"
+#include "SmartDinner/SmartDinner.h"
 #include <glade/glade.h>
 // ------------------------------------------------------------------------------
 using namespace std;
@@ -19,7 +20,7 @@ MainWindow::MainWindow (string gladedir, string guifile, string svgdir) :
 	progress(0)
 	,alignment(0.5, 0.5, 0, 0)
 	,dinner(NULL)
-	,algorithm(SIMPLE_ALGORITHM)
+	,algorithm(SMART_ALGORITHM)
 {
 	splash.modify_bg(Gtk::STATE_NORMAL, Gdk::Color("#000000"));
 	alignment.add(bar);
@@ -139,6 +140,8 @@ bool MainWindow::on_choose(GtkWidget* w)
 		gwindow->algorithm = HUNGRY_ALGORITHM;
 	else if( widget->get_name() == "priority_algorithm" )
 		gwindow->algorithm = PRIPORITY_ALGORITHM;
+	else if( widget->get_name() == "smart_algorithm" )
+		gwindow->algorithm = SMART_ALGORITHM;
 	//gwindow->dinner->start();
 	return false; // передаем вызов обработчику по умолчанию
 }
@@ -152,8 +155,10 @@ Dinner* MainWindow::make_dinner(const Dinner* copy)
 		case HUNGRY_ALGORITHM:
 			return copy ? new HungrySimpleDinner(*copy) : new HungrySimpleDinner();
 		case PRIPORITY_ALGORITHM:
-		default:
 			return copy ? new PriorityDinner(*copy) : new PriorityDinner();
+		case SMART_ALGORITHM:
+		default:
+			return copy ? new SmartDinner(*copy) : new SmartDinner();
 	}
 }
 //---------------------------------------------------------------------------------------

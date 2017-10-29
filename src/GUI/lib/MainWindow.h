@@ -38,7 +38,8 @@ namespace knights
 			{
 				SIMPLE_ALGORITHM,
 				HUNGRY_ALGORITHM,
-				PRIPORITY_ALGORITHM
+				PRIPORITY_ALGORITHM,
+				SMART_ALGORITHM
 			};
 			Algorithm algorithm;
 	};

@@ -1,5 +1,5 @@
-#ifndef _PriorityDinner_H_
-#define _PriorityDinner_H_
+#ifndef _SmartDinner_H_
+#define _SmartDinner_H_
 
 #include "Dinner.h"
 #include "Knight/Knight.h"
@@ -9,19 +9,21 @@ namespace knights
 
 /*!
 	Алгоритм обеда:
-		формируем очередь HungerQuery, по которой выдаем разрешение
+		выдает строго max_permitions_ разрешений (следит что бы не выдавалось соседям и рыцарям с одинаковыми ножами)
+		формируем очередь HungerQuery, по которой выдаем 1ое разрешение
+		остальные разрешения выдается отталкиваясь от 1ого
 */
 
-class PriorityDinner :
+class SmartDinner :
 	public Dinner
 {
 	public:
-		PriorityDinner( const int& num = 5 );
-		PriorityDinner( const Dinner& dinner );
-		virtual ~PriorityDinner();
+		SmartDinner( const int& num = 5 );
+		SmartDinner( const Dinner& dinner );
+		virtual ~SmartDinner();
 		virtual void step(); // шаг обеда
 		virtual void start(); // начать обед
-		virtual const std::string getName() { return "PriorityDinner"; }
+		virtual const std::string getName() { return "SmartDinner"; }
 		
 		class HungerQuery
 		{
@@ -38,4 +40,4 @@ class PriorityDinner :
 };
 
 }
-#endif //_PriorityDinner_H_
+#endif //_SmartDinner_H_

@@ -68,6 +68,7 @@ AC_CONFIG_FILES([Makefile
 				 src/Algorithms/SimpleDinner/Makefile
 				 src/Algorithms/HungrySimpleDinner/Makefile
 				 src/Algorithms/PriorityDinner/Makefile
+				 src/Algorithms/SmartDinner/Makefile
 				 src/GUI/Makefile
 				 src/GUI/lib/Makefile
 				 src/GUI/widgets/Makefile
