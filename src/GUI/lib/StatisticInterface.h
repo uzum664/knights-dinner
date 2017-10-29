@@ -11,15 +11,15 @@ namespace knights
 	class StatisticInterface
 	{
 		public:;
-			static StatisticInterface* Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml = Glib::RefPtr<Gnome::Glade::Xml>(), Dinner* const dinner = NULL );
+			static StatisticInterface* Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml = Glib::RefPtr<Gnome::Glade::Xml>() );
 			virtual ~StatisticInterface();
+			void reinit( Dinner* const dinner );
 			
 			int getPollTimeout() { return 200; } // период цикла обработки данных, мс
 			
 		protected:
-			StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml, Dinner* const dinner );
+			StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml );
 			StatisticInterface() {};
-			void init();
 			bool poll();
 			
 		private:

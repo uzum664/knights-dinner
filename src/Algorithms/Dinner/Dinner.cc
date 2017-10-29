@@ -8,14 +8,14 @@
 using namespace std;
 using namespace knights;
 Dinner::Knights Dinner::knights_;
-unsigned int Dinner::knights_owners_ = 0;
+unsigned int Dinner::dinner_counter_ = 0;
 //---------------------------------------------------------------------------------------
 Dinner::Dinner( const int& num ) :
 	running_(false)
 	,place_num_(num)
 {
 	table_ = Table::Instance(place_num_);
-	knights_owners_++;
+	dinner_counter_++;
 }
 //---------------------------------------------------------------------------------------
 Dinner::Dinner( const Dinner& dinner ) :
@@ -23,18 +23,20 @@ Dinner::Dinner( const Dinner& dinner ) :
 	,place_num_(dinner.place_num_)
 {
 	table_ = dinner.table_;
-	knights_owners_++;
+	dinner_counter_++;
 }
 //---------------------------------------------------------------------------------------
 Dinner::~Dinner()
 {
 	stop();
-	if( knights_owners_-- == 0 )
+	if( --dinner_counter_ == 0 )
 	{
 		for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
 			if( *it )
 				delete *it;
 		knights_.clear();
+		if( table_ )
+			table_->Destroy();
 	}
 }
 //---------------------------------------------------------------------------------------

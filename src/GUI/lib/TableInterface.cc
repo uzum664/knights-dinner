@@ -21,15 +21,6 @@ TableInterface::TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml 
 		cerr << "TableInterface(): No 'roundtable1' in glade!" << endl;
 		throw;
 	}
-	
-	Table* table = Table::Instance();
-	if( !table )
-	{
-		cerr << "TableInterface(): No table ???" << endl;
-		throw;
-	}
-	// подключаем отложенную инициализацию
-	gui_table_->signal_realize().connect( sigc::mem_fun( this, &TableInterface::init) );
 	// цикл алгоритма обновления
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &TableInterface::poll ), getPollTimeout() );
 }
@@ -45,11 +36,9 @@ TableInterface*  TableInterface::Instance( const Glib::RefPtr<Gnome::Glade::Xml>
 	return table_interface_;
 }
 // -------------------------------------------------------------------------
-void TableInterface::init()
+void TableInterface::reinit()
 {
 	Table* table = Table::Instance();
-	if( !table )
-		return;
 	// формируем массив knife_keys_, т.е. выстраиваем соответствие ножа своему спрайту (Knife* -> RoundTable::ImageKey)
 	{
 		RoundTable::ImageKey i = 0;
@@ -80,9 +69,6 @@ void TableInterface::init()
 bool TableInterface::poll()
 {
 	Table* table = Table::Instance();
-	if( !table )
-		return true;
-	
 	// Проверяем и перемещаем ножи
 	{
 		RoundTable::ImagePosition i = 0;

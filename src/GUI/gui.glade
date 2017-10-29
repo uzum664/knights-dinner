@@ -89,6 +89,21 @@
         </child>
         <child>
           <widget class="GtkButton" id="button2">
+            <property name="label" translatable="yes">Продолжить</property>
+            <property name="width_request">100</property>
+            <property name="height_request">80</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="continue" swapped="no"/>
+          </widget>
+          <packing>
+            <property name="x">200</property>
+            <property name="y">740</property>
+          </packing>
+        </child>
+        <child>
+          <widget class="GtkButton" id="button3">
             <property name="label" translatable="yes">Стоп</property>
             <property name="width_request">100</property>
             <property name="height_request">80</property>
@@ -98,7 +113,7 @@
             <signal name="clicked" handler="stop" swapped="no"/>
           </widget>
           <packing>
-            <property name="x">220</property>
+            <property name="x">340</property>
             <property name="y">740</property>
           </packing>
         </child>

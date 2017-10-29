@@ -9,7 +9,7 @@ using namespace knights;
 // -------------------------------------------------------------------------
 StatisticInterface* StatisticInterface::stats_interface_ = NULL;
 // -------------------------------------------------------------------------
-StatisticInterface::StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml, Dinner* const dinner ) :
+StatisticInterface::StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml ) :
 	stats_(NULL)
 {
 	if( !gladexml )
@@ -23,17 +23,6 @@ StatisticInterface::StatisticInterface( const Glib::RefPtr<Gnome::Glade::Xml>& g
 		cerr << "StatisticInterface(): No 'statistic1' in glade!" << endl;
 		throw;
 	}
-	if( !dinner )
-	{
-		cerr << "StatisticInterface(): No dinner object!" << endl;
-		throw;
-	}
-	// наполняем список рыцарей
-	Dinner::Knights knights = dinner->getKnights();
-	for(Dinner::Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
-		knights_.push_back(KnightInfo(*it));
-	// подключаем отложенную инициализацию
-	stats_->signal_realize().connect( sigc::mem_fun( this, &StatisticInterface::init) );
 	// цикл алгоритма обновления
 	Glib::signal_timeout().connect( sigc::mem_fun( this, &StatisticInterface::poll ), getPollTimeout() );
 }
@@ -42,18 +31,27 @@ StatisticInterface::~StatisticInterface()
 {
 }
 // -------------------------------------------------------------------------
-StatisticInterface*  StatisticInterface::Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml, Dinner* const dinner )
+StatisticInterface*  StatisticInterface::Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml )
 {
 	if( !stats_interface_ )
-		stats_interface_ = new StatisticInterface(gladexml, dinner);
+		stats_interface_ = new StatisticInterface(gladexml);
 	return stats_interface_;
 }
 // -------------------------------------------------------------------------
-void StatisticInterface::init()
+void StatisticInterface::reinit( Dinner* const dinner )
 {
-	// добавляем рыцарей в таблицу в том порядке, как сидят
-	for(Knights::iterator it = knights_.begin() ; it != knights_.end(); ++it )
-		it->row = stats_->addRow();
+	stats_->clear();
+	knights_.clear();
+	if( !dinner )
+		return;
+	// наполняем список рыцарей
+	Dinner::Knights knights = dinner->getKnights();
+	for(Dinner::Knights::iterator it = knights.begin() ; it != knights.end(); ++it )
+	{
+		KnightInfo ki(*it);
+		ki.row = stats_->addRow();
+		knights_.push_back(ki);
+	}
 }
 // -------------------------------------------------------------------------
 bool StatisticInterface::poll()

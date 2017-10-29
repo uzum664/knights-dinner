@@ -12,9 +12,27 @@ Table* Table::inst = NULL;
 //---------------------------------------------------------------------------------------
 Table* Table::Instance( const int& num )
 {
+	// вызов Instance с параметром num происходит из Алгоритма (см Dinner.h)
+	// поэтому принудительно пересоздаем
+	if( inst )
+		inst->Destroy();
 	if( inst == NULL )
-		inst =  new Table( num );
+		inst = new Table(num);
 	return inst;
+}
+//---------------------------------------------------------------------------------------
+Table* Table::Instance()
+{
+	if( inst == NULL )
+		inst = new Table(0);
+	return inst;
+}
+//---------------------------------------------------------------------------------------
+void Table::Destroy()
+{
+	if(inst)
+		delete inst;
+	inst = NULL;
 }
 //---------------------------------------------------------------------------------------
 Table::Table( const int& num )

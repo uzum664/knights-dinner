@@ -13,13 +13,13 @@ namespace knights
 		public:;
 			static TableInterface* Instance( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml = Glib::RefPtr<Gnome::Glade::Xml>() );
 			virtual ~TableInterface();
+			void reinit();
 			
 			int getPollTimeout() { return 200; } // период цикла обработки данных, мс
 			
 		protected:
 			TableInterface( const Glib::RefPtr<Gnome::Glade::Xml>& gladexml );
 			TableInterface() {};
-			void init();
 			bool poll();
 			
 		private:

@@ -25,7 +25,7 @@ class Dinner
 	public:
 		Dinner( const int& num = 5 );
 		Dinner( const Dinner& dinner );
-		virtual ~Dinner();
+		virtual ~Dinner(); // в деструкторе если счетчик dinner_counter_ обнуляется то удаляется окружение (стол, рыцари)
 		virtual void step(){}; // шаг обеда
 		virtual void start(); // начать обед ( просто выдаем разрешение рыцарем кушать и запускаем поток если не был запущен)
 		virtual void stop(); // остановить обед ( отбираем разрешение )
@@ -35,6 +35,7 @@ class Dinner
 		void waitThread();
 		typedef std::list<Knight*> Knights;
 		Knights getKnights() { return knights_; } // Получить список рыцарей
+		virtual const std::string getName() { return "???Dinner"; }
 		
 	protected:
 		void thread(); // поток обеда обеда
@@ -47,7 +48,7 @@ class Dinner
 		int place_num_; // кол-во мест за столом
 		pthread_t thread_;
 		pthread_attr_t thread_attr_;
-		static unsigned int knights_owners_; // кол-во обедов (счетчик для удаления рыцарей когда будут удалены все экземпляры обедов)
+		static unsigned int dinner_counter_; // кол-во обедов (счетчик для удаления рыцарей когда будут удалены все экземпляры обедов)
 };
 
 }

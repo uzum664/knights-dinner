@@ -33,6 +33,7 @@ namespace knights
 			
 			template<class ColumnsPack> void updateRow( const unsigned int& number, const ColumnsPack& data ) {} // обновить запись
 			unsigned int addRow(); // добавить запись
+			void clear(); // удалить все записи
 			
 		protected:
 			virtual void on_realize();
