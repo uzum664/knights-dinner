@@ -163,6 +163,12 @@ bool Knight::askSwapKnifes()
 		pthread_mutex_unlock(&mutex_);
 		return false;
 	}
+	// не обещаем поменять если ножи недоступны
+	if( getState() != EAT && !isKnifesAvailable() )
+	{
+		pthread_mutex_unlock(&mutex_);
+		return false;
+	}
 	if( swapped_knifes_ )
 	{
 		pthread_mutex_unlock(&mutex_);
