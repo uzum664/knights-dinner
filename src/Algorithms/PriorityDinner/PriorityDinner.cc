@@ -1,5 +1,6 @@
 #include "PriorityDinner.h"
 #include "Knight/HungryKnight.h"
+#include "Configuration.h"
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -8,12 +9,20 @@ PriorityDinner::PriorityDinner( const int& num ) :
 	Dinner(num)
 	,max_permitions_(num / 2) // инициализируем максимально возможным кол-вом пар разных ножей
 {
+	ostringstream os;
+	os << "Новый алгоритм 'Обед с приоритетами'";
+	cout << os.str() << endl;
+	MessageQueue::push(os.str());
 }
 //---------------------------------------------------------------------------------------
 PriorityDinner::PriorityDinner( const Dinner& dinner ) :
 	Dinner(dinner)
 	,max_permitions_(getPlaceNum() / 2)
 {
+	ostringstream os;
+	os << "Алгоритм изменен на 'Обед с приоритетами'";
+	cout << os.str() << endl;
+	MessageQueue::push(os.str());
 }
 //---------------------------------------------------------------------------------------
 PriorityDinner::~PriorityDinner()

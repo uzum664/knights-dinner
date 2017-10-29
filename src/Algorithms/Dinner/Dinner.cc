@@ -28,6 +28,7 @@ Dinner::Dinner( const Dinner& dinner ) :
 //---------------------------------------------------------------------------------------
 Dinner::~Dinner()
 {
+	bool interrupted = running_;
 	stop();
 	if( --dinner_counter_ == 0 )
 	{
@@ -37,6 +38,14 @@ Dinner::~Dinner()
 		knights_.clear();
 		if( table_ )
 			table_->Destroy();
+		// если поток завершился не сам
+		if( interrupted )
+		{
+			ostringstream os;
+			os << "Обед прерван";
+			cout << os.str() << endl;
+			MessageQueue::push(os.str());
+		}
 	}
 }
 //---------------------------------------------------------------------------------------
@@ -138,8 +147,10 @@ void Dinner::thread()
 		usleep(100000);
 	}
 	ostringstream os;
-	os << "Dinner ends in " << ( time(NULL) - begin ) << " sec" << endl;
-	cout << os.str();
+	os << "Обед закончен";
+	MessageQueue::push(os.str());
+	os << " за " << ( time(NULL) - begin ) << " сек" << endl;
+	cout << os.str() << endl;
 	running_ = false;
 }
 //---------------------------------------------------------------------------------------

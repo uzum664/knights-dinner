@@ -19,6 +19,7 @@ class SimpleDinner :
 		SimpleDinner( const Dinner& dinner );
 		virtual ~SimpleDinner();
 		virtual void step(); // шаг обеда
+		virtual const std::string getName() { return "SimpleDinner"; }
 		
 	protected:
 		

@@ -20,6 +20,7 @@ class PriorityDinner :
 		virtual ~PriorityDinner();
 		virtual void step(); // шаг обеда
 		virtual void start(); // начать обед
+		virtual const std::string getName() { return "PriorityDinner"; }
 		
 	protected:
 		typedef std::list<Knight*> HungryKnights;

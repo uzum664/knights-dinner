@@ -1,5 +1,6 @@
 #include "SimpleDinner.h"
 #include "Knight/Knight.h"
+#include "Configuration.h"
 //---------------------------------------------------------------------------------------
 using namespace std;
 using namespace knights;
@@ -7,11 +8,19 @@ using namespace knights;
 SimpleDinner::SimpleDinner( const int& num ) :
 	Dinner(num)
 {
+	ostringstream os;
+	os << "Новый алгоритм 'Простой обед'";
+	cout << os.str() << endl;
+	MessageQueue::push(os.str());
 }
 //---------------------------------------------------------------------------------------
 SimpleDinner::SimpleDinner( const Dinner& dinner ) :
 	Dinner(dinner)
 {
+	ostringstream os;
+	os << "Алгоритм изменен на 'Простой обед'";
+	cout << os.str() << endl;
+	MessageQueue::push(os.str());
 }
 //---------------------------------------------------------------------------------------
 SimpleDinner::~SimpleDinner()
