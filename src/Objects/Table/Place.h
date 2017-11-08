@@ -1,6 +1,7 @@
 #ifndef _Place_H_
 #define _Place_H_
 
+#include <stdint.h>
 #include <iostream>
 #include "Table.h"
 
@@ -19,7 +20,7 @@ class Place
 {
 	public:
 		virtual ~Place();
-		typedef int Owner;
+		typedef intptr_t Owner;
 		Owner getOwner() const { return owner_; }; // Получить владельца
 		bool isBusy() const { return owner_ != NULL; };
 		bool take( const Owner& owner ); // занять место
